@@ -2,5 +2,30 @@
   "format": 1,
   "name": "Axonyum's Plugins",
   "description": "Valenced plugins created by Axonyum.",
-  "plugins": {}
+  "plugins": {
+    "dev.apollyxnhashed.selectableprofiles": {
+      "name": "Selectable Profiles",
+      "description": "Long-press profile text to select and copy it: display name, pronouns, status and bio. Each field can be turned on or off in the settings.",
+      "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+      "icon": "PencilIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/dev.apollyxnhashed.selectableprofiles@1.0.0.zip",
+          "sha256": "43c663ff05f54280fbbfe9cde858e3499e0ce711270ce8903b9960d8bb8841b3",
+          "size": 3168,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
+    }
+  }
 }
