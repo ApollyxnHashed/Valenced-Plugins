@@ -3,29 +3,6 @@
   "name": "Axonyum's Plugins",
   "description": "Valenced plugins created by Axonyum.",
   "plugins": {
-    "axonyum.live-timestamp": {
-      "name": "Live Timestamp",
-      "description": "Live countdown, accurate to the second, for Discord <t:...> timestamps. Updates every second without reloading the chat.",
-      "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
-      "channels": {
-        "latest": "1.0.0"
-      },
-      "versions": {
-        "1.0.0": {
-          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.live-timestamp@1.0.0.zip",
-          "sha256": "e02c32ca19bf659d502ecf61903bcb188bb93d023d814e005ecbd9da6e39fe4a",
-          "size": 4303,
-          "dependencies": {
-            "valenced.api": {
-              "version": ">=1 <2"
-            },
-            "discord": {
-              "version": "*"
-            }
-          }
-        }
-      }
-    },
     "axonyum.selectable-profiles": {
       "name": "Selectable Profiles",
       "description": "Long-press profile text to select and copy it: display name, pronouns, status and bio. Each field can be turned on or off in the settings.",
