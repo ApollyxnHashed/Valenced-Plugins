@@ -3,6 +3,30 @@
   "name": "Axonyum's Plugins",
   "description": "Valenced plugins created by Axonyum.",
   "plugins": {
+    "axonyum.chat-emoji-diagnostic": {
+      "name": "Chat Emoji Diagnostic",
+      "description": "Temporary diagnostic tool. Records how the channel name field asks the keyboard to behave, so the emoji button can be fixed.",
+      "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+      "icon": "WrenchIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.chat-emoji-diagnostic@1.0.0.zip",
+          "sha256": "2a364ee84ea224ad3e6aa228a3b0180c2f57dfd488b97053d85fb721f2961247",
+          "size": 15096,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
+    },
     "axonyum.selectable-profiles": {
       "name": "Selectable Profiles",
       "description": "Long-press profile text to select and copy it: display name, pronouns, status and bio. Each field can be turned on or off in the settings.",
