@@ -3,19 +3,19 @@
   "name": "Axonyum's Plugins",
   "description": "Valenced plugins created by Axonyum.",
   "plugins": {
-    "axonyum.chat-emoji-diagnostic": {
-      "name": "Chat Emoji Diagnostic",
-      "description": "Temporary diagnostic tool. Records how the channel name field asks the keyboard to behave, so the emoji button can be fixed.",
+    "axonyum.chat-emoji-compatibility": {
+      "name": "Chat Emoji Compatibility",
+      "description": "Lets the keyboard emoji button work in Discord fields that block it, such as the channel name editor.",
       "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
-      "icon": "WrenchIcon",
+      "icon": "PencilIcon",
       "channels": {
         "latest": "1.0.0"
       },
       "versions": {
         "1.0.0": {
-          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.chat-emoji-diagnostic@1.0.0.zip",
-          "sha256": "2a364ee84ea224ad3e6aa228a3b0180c2f57dfd488b97053d85fb721f2961247",
-          "size": 15096,
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.chat-emoji-compatibility@1.0.0.zip",
+          "sha256": "02f2d912c5fa6feb99a4a2b7cde8e39a80c7b93b772d95860b84326a13e79a99",
+          "size": 3918,
           "dependencies": {
             "valenced.api": {
               "version": ">=1 <2"
