@@ -1,0 +1,23 @@
+{
+	"format": 1,
+	"id": "axonyum.chat-emoji-compatibility",
+	"name": "Chat Emoji Compatibility",
+	"description": "Lets the keyboard emoji button work in Discord fields that block it, such as the channel name editor.",
+	"author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+	"icon": "PencilIcon",
+	"version": "1.0.0",
+	"dependencies": {
+		"valenced.api": {
+			"version": ">=1 <2"
+		},
+		"discord": {
+			"version": "*"
+		}
+	},
+	"dist": {
+		"android": {
+			"path": "plugin.jar",
+			"class": "axonyum.ChatEmojiCompatibility"
+		}
+	}
+}
