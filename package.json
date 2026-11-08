@@ -1,5 +1,5 @@
 {
-	"name": "@example/valenced-plugins",
+	"name": "@axonyum/valenced-plugins",
 	"private": true,
 	"type": "module",
 	"scripts": {
