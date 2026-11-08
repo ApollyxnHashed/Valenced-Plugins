@@ -1,0 +1,20 @@
+{
+	"format": 1,
+	"id": "axonyum.freeze-member-list",
+	"name": "Freeze Member List",
+	"description": "Freezes the member list of the open server: keeps who is online or offline, and where each member sits, exactly as it was when you froze it.",
+	"author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+	"version": "1.0.0",
+	"icon": "PauseIcon",
+	"dependencies": {
+		"valenced.api": {
+			"version": ">=1 <2"
+		},
+		"discord": {
+			"version": "*"
+		}
+	},
+	"dist": {
+		"script": "index.js"
+	}
+}
