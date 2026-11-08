@@ -40,6 +40,30 @@
         }
       }
     },
+    "axonyum.freeze-member-list": {
+      "name": "Freeze Member List",
+      "description": "Freezes the member list of the open server: keeps who is online or offline, and where each member sits, exactly as it was when you froze it.",
+      "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+      "icon": "PauseIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.freeze-member-list@1.0.0.zip",
+          "sha256": "bfe147798afc6631a51984d5a5987280ba8309b20dcedad92a470140c2e76a42",
+          "size": 32866,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
+    },
     "axonyum.selectable-profiles": {
       "name": "Selectable Profiles",
       "description": "Long-press profile text to select and copy it: display name, pronouns, status and bio. Each field can be turned on or off in the settings.",
