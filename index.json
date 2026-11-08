@@ -7,15 +7,28 @@
       "name": "Chat Emoji Compatibility",
       "description": "Lets the keyboard emoji button work in Discord fields that block it, such as the channel name editor.",
       "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
-      "icon": "PencilIcon",
+      "icon": "EmojiSlightlySmilingFaceIcon",
       "channels": {
-        "latest": "1.0.0"
+        "latest": "1.0.1"
       },
       "versions": {
         "1.0.0": {
           "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.chat-emoji-compatibility@1.0.0.zip",
           "sha256": "02f2d912c5fa6feb99a4a2b7cde8e39a80c7b93b772d95860b84326a13e79a99",
           "size": 3918,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        },
+        "1.0.1": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.chat-emoji-compatibility@1.0.1.zip",
+          "sha256": "f8b4972cacf1c0e7c3ff27b61b7e801f6024ce14a2c3c4008e7fc0b9720b0cf6",
+          "size": 3930,
           "dependencies": {
             "valenced.api": {
               "version": ">=1 <2"
