@@ -70,13 +70,26 @@
       "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
       "icon": "PencilIcon",
       "channels": {
-        "latest": "1.0.0"
+        "latest": "1.0.1"
       },
       "versions": {
         "1.0.0": {
           "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.selectable-profiles@1.0.0.zip",
           "sha256": "723d9c5fd8fa414b4c512804c30e1118e13fe4ca68c6d9e6f783d6b03721e053",
           "size": 3160,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        },
+        "1.0.1": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.selectable-profiles@1.0.1.zip",
+          "sha256": "fa219f039d283ebd1705f1166c0cfb7b0166032f9f6ef62b24f97cfba11a00b2",
+          "size": 3207,
           "dependencies": {
             "valenced.api": {
               "version": ">=1 <2"
