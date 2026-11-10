@@ -5,7 +5,7 @@
 Long-press profile text to select and copy it: display name, pronouns, custom status and bio.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugin-5865F2?logo=discord&logoColor=white)
-![Version](https://img.shields.io/badge/version-1.0.0-2ea44f)
+![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)
 ![Type](https://img.shields.io/badge/type-JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -76,7 +76,7 @@ Discord does not expose a stable component for the display name, pronouns and st
 | Field | Value |
 |---|---|
 | ID | `axonyum.selectable-profiles` |
-| Version | `1.0.0` |
+| Version | `1.0.1` |
 | Type | JavaScript |
 | Dependencies | `valenced.api` (`>=1 <2`), `discord` (any version) |
 
