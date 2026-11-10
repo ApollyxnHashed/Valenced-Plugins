@@ -10,7 +10,7 @@ val chatEmojiCompatibility = plugin {
 
     start {
         // If the hook cannot be installed this throws, so Valenced shows the error
-        fix = EmojiKeyboardFix().also { it.install() }
+        fix = EmojiKeyboardFix()
         log.i("Chat Emoji Compatibility: keyboard hook installed")
     }
 

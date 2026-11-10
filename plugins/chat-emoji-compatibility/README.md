@@ -5,7 +5,7 @@
 Restores the keyboard's emoji button in Discord fields that hide it.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugin-5865F2?logo=discord&logoColor=white)
-![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)
+![Version](https://img.shields.io/badge/version-1.0.2-2ea44f)
 ![Type](https://img.shields.io/badge/type-Kotlin-7F52FF?logo=kotlin&logoColor=white)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -65,7 +65,7 @@ When a text field creates its connection to the keyboard, the plugin checks the 
 | Field | Value |
 |---|---|
 | ID | `axonyum.chat-emoji-compatibility` |
-| Version | `1.0.1` |
+| Version | `1.0.2` |
 | Type | Kotlin (native), via `dist.android` |
 | Class | `axonyum.ChatEmojiCompatibility` |
 | Dependencies | `valenced.api` (`>=1 <2`), `discord` (any version) |

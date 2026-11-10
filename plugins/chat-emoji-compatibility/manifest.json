@@ -5,7 +5,7 @@
 	"description": "Lets the keyboard emoji button work in Discord fields that block it, such as the channel name editor.",
 	"author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
 	"icon": "EmojiSlightlySmilingFaceIcon",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"dependencies": {
 		"valenced.api": {
 			"version": ">=1 <2"

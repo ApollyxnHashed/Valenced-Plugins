@@ -14,27 +14,18 @@ import de.robv.android.xposed.XposedBridge
  * so they are never changed. Only what the keyboard is told changes, not the field itself.
  */
 internal class EmojiKeyboardFix {
-    private var unhook: XC_MethodHook.Unhook? = null
-
-    fun install() {
-        // A framework method, so it works whatever Discord renames
-        val method = TextView::class.java.getDeclaredMethod(
-            "onCreateInputConnection",
-            EditorInfo::class.java,
-        )
-
-        unhook = XposedBridge.hookMethod(method, object : XC_MethodHook() {
+    // A framework method, so it works whatever Discord renames
+    private val unhook: XC_MethodHook.Unhook = XposedBridge.hookMethod(
+        TextView::class.java.getDeclaredMethod("onCreateInputConnection", EditorInfo::class.java),
+        object : XC_MethodHook() {
             override fun afterHookedMethod(param: MethodHookParam) {
                 val info = param.args[0] as? EditorInfo ?: return
                 info.inputType = fixInputType(info.inputType)
             }
-        })
-    }
+        },
+    )
 
-    fun dispose() {
-        unhook?.unhook()
-        unhook = null
-    }
+    fun dispose() = unhook.unhook()
 }
 
 /** Returns [type] unchanged unless it is the class-less "visible password" type. */
