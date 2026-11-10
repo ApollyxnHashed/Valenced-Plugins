@@ -11,7 +11,7 @@ type SettingComponentProps = ComponentProps<
 	PluginSettingsComponent<{ jsonStorage: Settings }>
 >
 
-const Fields: FieldKey[] = ['displayName', 'pronouns', 'status', 'bio']
+const Fields = Object.keys(FieldLabels) as FieldKey[]
 
 export default function SettingsComponent({
 	api: { jsonStorage: storage },

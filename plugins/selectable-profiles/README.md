@@ -61,7 +61,12 @@ Discord does not expose a stable component for the display name, pronouns and st
 | File | Purpose |
 |---|---|
 | `manifest.json` | Plugin identity: ID, version, author and dependencies |
-| `index.tsx` | Entry point: bio patch, profile detection and marking of selectable text |
+| `index.tsx` | Entry point: lifecycle, and hooking everything together |
+| `bio.ts` | Bio patch (`BioText` component) |
+| `profiles.ts` | Learns which users have a profile on screen and their display name, pronouns and status |
+| `matching.ts` | Matches text on screen against those values |
+| `gate.tsx` | Makes matching text selectable while the profile is open, and detects when it closes |
+| `storage.ts` | Access to the saved settings |
 | `shared.ts` | Types, default values and labels for the settings |
 | `settings.tsx` | Settings screen with the four switches |
 | `tsconfig.json` | Type-checking configuration |

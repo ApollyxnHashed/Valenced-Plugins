@@ -5,14 +5,14 @@ export interface Settings {
 	bio: boolean
 }
 
+export type FieldKey = keyof Settings
+
 export const DefaultSettings: Settings = {
 	displayName: true,
 	pronouns: true,
 	status: true,
 	bio: true,
 }
-
-export type FieldKey = keyof Settings
 
 export const FieldLabels: Record<
 	FieldKey,
@@ -35,3 +35,5 @@ export const FieldLabels: Record<
 		subLabel: 'The bio text of the profile.',
 	},
 }
+
+export const noop = () => {}
