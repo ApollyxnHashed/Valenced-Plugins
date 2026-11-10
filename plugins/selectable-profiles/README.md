@@ -30,7 +30,9 @@ In the Discord mobile app, profile text can't be selected. Copying a pronoun, a 
 | Custom status | While the profile is open |
 | Bio | Whenever the bio is shown |
 
-If you enable the plugin while the app is already open, Discord asks you to restart once.
+Selection stops as soon as the profile closes.
+
+If you enable the plugin while the app is already open, Valenced asks you to reload the app once.
 
 ## ⚙️ Settings
 
@@ -44,7 +46,7 @@ Discord does not expose a stable component for the display name, pronouns and st
 <summary><b>🔧 Technical details</b></summary>
 
 - Values read for each user are kept for up to 30 minutes after the last read.
-- An open profile is detected through an anchor line (username and pronouns) that exists only inside the profile.
+- An open profile is detected through an anchor line: the username, followed by the pronouns when the user has them.
 - The bio uses a patch on the `BioText` component, based on the same technique as the community plugin "Selectable Bios".
 - Display name, pronouns and status use a patch on `UserProfileStore` (`getUserProfile` and `getGuildMemberProfile`) and `insteadJSX` on `Text` components.
 - Disabling the plugin clears the stored values and removes the patches.

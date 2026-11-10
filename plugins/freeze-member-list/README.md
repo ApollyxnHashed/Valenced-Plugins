@@ -37,7 +37,7 @@ Drag the button to move it. Its position is saved and survives screen rotation a
 - **Reset button position**: moves the button back to its default position.
 - **Freeze member list**: freezes or unfreezes the list without using the button.
 
-If you enable the plugin while the app is already open, Discord asks you to restart once so the button can appear.
+If you enable the plugin while the app is already open, Valenced asks you to reload the app once so the button can appear.
 
 ## 🆘 Troubleshooting
 
