@@ -9,7 +9,7 @@
       "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
       "icon": "EmojiSlightlySmilingFaceIcon",
       "channels": {
-        "latest": "1.0.1"
+        "latest": "1.0.2"
       },
       "versions": {
         "1.0.0": {
@@ -29,6 +29,19 @@
           "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.chat-emoji-compatibility@1.0.1.zip",
           "sha256": "f8b4972cacf1c0e7c3ff27b61b7e801f6024ce14a2c3c4008e7fc0b9720b0cf6",
           "size": 3930,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        },
+        "1.0.2": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.chat-emoji-compatibility@1.0.2.zip",
+          "sha256": "48d7ca5f846e18c6bc7323b058d3b83ea81abcb00de8a2b95ddbd502d4cdd9aa",
+          "size": 3776,
           "dependencies": {
             "valenced.api": {
               "version": ">=1 <2"
