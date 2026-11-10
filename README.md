@@ -27,7 +27,7 @@ The Discord mobile app has a few everyday friction points: a member list that ke
 | | Plugin | Description | Type | Version |
 |:-:|---|---|:-:|:-:|
 | ❄️ | [**Freeze Member List**](plugins/freeze-member-list/README.md) | Freezes the member list of the open server. | JavaScript | `1.0.0` |
-| ✏️ | [**Selectable Profiles**](plugins/selectable-profiles/README.md) | Lets you select and copy the display name, pronouns, status and bio on a profile. | JavaScript | `1.0.0` |
+| ✏️ | [**Selectable Profiles**](plugins/selectable-profiles/README.md) | Lets you select and copy the display name, pronouns, status and bio on a profile. | JavaScript | `1.0.1` |
 | 😀 | [**Chat Emoji Compatibility**](plugins/chat-emoji-compatibility/README.md) | Restores the keyboard emoji button in fields where Discord hides it. | Kotlin | `1.0.1` |
 
 ## 📦 Installation
