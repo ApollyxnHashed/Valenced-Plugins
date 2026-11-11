@@ -59,13 +59,26 @@
       "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
       "icon": "PauseIcon",
       "channels": {
-        "latest": "1.0.0"
+        "latest": "1.0.1"
       },
       "versions": {
         "1.0.0": {
           "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.freeze-member-list@1.0.0.zip",
           "sha256": "bfe147798afc6631a51984d5a5987280ba8309b20dcedad92a470140c2e76a42",
           "size": 32866,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        },
+        "1.0.1": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.freeze-member-list@1.0.1.zip",
+          "sha256": "d958ebeffaa37db306562eb7808d414971177025ae686d5dd872eb67a339f841",
+          "size": 32674,
           "dependencies": {
             "valenced.api": {
               "version": ">=1 <2"
