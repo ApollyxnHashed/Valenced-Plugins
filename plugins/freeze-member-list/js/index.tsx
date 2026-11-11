@@ -1,44 +1,35 @@
-import { instead } from '@valenced/patcher'
 import { startFreeze } from './freeze'
-import { installOverlay, wasOverlayMounted } from './overlay'
+import { installOverlay } from './overlay'
 import { SettingsComponent } from './settings'
 import {
 	attachStorage,
 	DEFAULTS,
-	detachStorage,
-	setEnabled,
-	setNeedsReload,
-} from './ui-state'
-import type { Persisted } from './ui-state'
+	isOverlayMounted,
+	setActive,
+	setReloadNeeded,
+} from './state'
+import type { Settings } from './state'
 
-export default plugin<{ jsonStorage: Persisted }>({
+export default plugin<{ jsonStorage: Settings }>({
 	jsonStorage: {
 		load: true,
 		default: DEFAULTS,
 	},
 	start({ cleanup, plugin, jsonStorage }) {
-		// Freeze logic first: it never touches the UI
+		attachStorage(jsonStorage)
+
+		// The freeze logic comes first: it never touches the UI
 		startFreeze(cleanup)
 
-		// The overlay must be registered before the app's first render, which is when plugins start at launch
-		cleanup(installOverlay(instead as never))
-		setEnabled(true)
-		cleanup(() => {
-			setEnabled(false)
-			detachStorage()
-		})
+		cleanup(installOverlay())
+		setActive(true)
+		cleanup(() => setActive(false))
 
-		// The wrapper slot is only read when the app renders its root, so a late start needs one reload,
-		// unless the overlay is already part of the app tree (plugin turned off and on again)
-		if (plugin.startedLate && !wasOverlayMounted()) {
-			setNeedsReload(true)
-			plugin.requireReload()
-		}
-
-		jsonStorage.get().then(
-			loaded => attachStorage(jsonStorage, loaded),
-			() => {},
-		)
+		// The wrapper slot is only read when the app renders its root, so enabling the plugin
+		// after launch needs one reload, unless the overlay is already in the app (turned off and on again)
+		const needsReload = plugin.startedLate && !isOverlayMounted()
+		setReloadNeeded(needsReload)
+		if (needsReload) plugin.requireReload()
 	},
 	SettingsComponent,
 })

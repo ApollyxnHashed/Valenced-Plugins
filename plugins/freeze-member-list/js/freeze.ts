@@ -1,20 +1,60 @@
 import { Dispatcher } from '@valenced/discord/common/flux'
-import { Stores, getStore } from '@valenced/discord/flux'
+import { getStore, Stores } from '@valenced/discord/flux'
 import { instead } from '@valenced/patcher'
+import { useReRender } from '@valenced/utils/react'
+import { useEffect } from 'react'
 
 /*
- * Freeze Member List: core logic (no UI).
+ * Freeze Member List: the freeze logic (no UI).
  *
- * What the real Discord client does (verified with the diagnostic logs):
- * - The list component (GuildChannelUserList) reads { listId, groups, rows } from
- *   ChannelMemberStore.getProps(guildId, channelId). Sections and member positions live there.
- * - Each row reads status, mobile flag and activities from PresenceStore, by user id.
+ * The member list component reads { listId, groups, rows } from ChannelMemberStore.getProps,
+ * which holds the sections and the position of every member. Each row then reads status,
+ * mobile flag and activities from PresenceStore by user id.
  *
- * So freezing is done only at presentation level: both reads return a snapshot while frozen.
+ * Freezing happens only at presentation level: both reads return a snapshot while frozen.
  * No Flux event is blocked and the Gateway connection is never touched.
  */
 
-interface PresenceSnapshot {
+export type FreezeResult =
+	| 'ok'
+	| 'already'
+	| 'no-server'
+	| 'no-list'
+	| 'not-ready'
+
+interface MemberListProps {
+	listId: string
+	groups: unknown[]
+	rows: unknown[]
+}
+
+interface MemberRow {
+	type: 'MEMBER'
+	userId: string
+}
+
+interface PresenceStore {
+	getStatus(userId: string): unknown
+	isMobileOnline(userId: string): unknown
+	isVROnline(userId: string): unknown
+	getPrimaryActivity(userId: string): unknown
+	getActivities(userId: string, guildId?: string): unknown
+	emitChange?(): void
+}
+
+type PatchedPresenceMethod =
+	| 'getStatus'
+	| 'isMobileOnline'
+	| 'isVROnline'
+	| 'getPrimaryActivity'
+	| 'getActivities'
+
+interface ChannelMemberStore {
+	getProps(guildId: string, channelId: string): MemberListProps | undefined
+	emitChange?(): void
+}
+
+interface MemberPresence {
 	status: unknown
 	mobile: unknown
 	vr: unknown
@@ -27,34 +67,29 @@ interface PresenceSnapshot {
 
 interface Snapshot {
 	guildId: string
-	channelId: string
 	listId: string
-	props: ListProps
-	presence: Map<string, PresenceSnapshot>
-	takenAt: number
+	props: MemberListProps
+	presence: Map<string, MemberPresence>
 }
-
-interface ListProps {
-	listId: string
-	groups: unknown[]
-	rows: unknown[]
-	[key: string]: unknown
-}
-
-export type FreezeResult = 'ok' | 'already' | 'no-server' | 'no-list' | 'not-ready'
 
 const LIST_UPDATE_EVENT = 'GUILD_MEMBER_LIST_UPDATE'
+
+/** Why a freeze could not start, in words short enough for a hint. */
+const FAILURE_MESSAGES: Partial<Record<FreezeResult, string>> = {
+	'no-server': 'Open a server first',
+	'no-list': 'Open the member list once first',
+	'not-ready': 'Still starting, try again',
+}
+
+export const describeFailure = (result: FreezeResult) =>
+	FAILURE_MESSAGES[result]
 
 let snapshot: Snapshot | undefined
 let started = false
 const listeners = new Set<() => void>()
 
 function notify() {
-	for (const l of listeners) {
-		try {
-			l()
-		} catch {}
-	}
+	for (const listener of listeners) listener()
 }
 
 export function subscribe(listener: () => void) {
@@ -66,85 +101,69 @@ export function subscribe(listener: () => void) {
 
 export const isFrozen = () => snapshot !== undefined
 
-export function getInfo() {
-	if (!snapshot) return undefined
-	return {
-		guildId: snapshot.guildId,
-		listId: snapshot.listId,
-		rows: snapshot.props.rows.length,
-		members: snapshot.presence.size,
-		takenAt: snapshot.takenAt,
-	}
+/** Re-renders the component whenever the list is frozen or unfrozen. */
+export function useFrozen() {
+	const reRender = useReRender()
+	useEffect(() => subscribe(reRender), [reRender])
+	return isFrozen()
 }
 
-const store = (name: string): any => {
+function readStore<T>(name: string): T | undefined {
 	try {
-		return (Stores as Record<string, any>)[name]
+		return Stores[name] as unknown as T
 	} catch {
 		return undefined
 	}
 }
 
-function currentGuildId(): string | undefined {
-	try {
-		return store('SelectedGuildStore')?.getGuildId?.() ?? undefined
-	} catch {
-		return undefined
-	}
-}
-
-function currentChannelId(): string | undefined {
-	try {
-		return store('SelectedChannelStore')?.getChannelId?.() ?? undefined
-	} catch {
-		return undefined
-	}
+function selectedId(
+	store: 'SelectedGuildStore' | 'SelectedChannelStore',
+): string | undefined {
+	const selected = readStore<{
+		getGuildId?(): string | null
+		getChannelId?(): string | null
+	}>(store)
+	return (
+		(store === 'SelectedGuildStore'
+			? selected?.getGuildId?.()
+			: selected?.getChannelId?.()) ?? undefined
+	)
 }
 
 /** Makes subscribed components read the stores again, so the list redraws right away. */
 function refreshList() {
-	for (const name of ['ChannelMemberStore', 'PresenceStore']) {
-		try {
-			store(name)?.emitChange?.()
-		} catch (e) {
-		}
-	}
+	readStore<ChannelMemberStore>('ChannelMemberStore')?.emitChange?.()
+	readStore<PresenceStore>('PresenceStore')?.emitChange?.()
 }
 
-function isMemberRow(row: any): row is { type: 'MEMBER'; userId: string } {
-	return row != null && row.type === 'MEMBER' && typeof row.userId === 'string'
-}
+const isMemberRow = (row: unknown): row is MemberRow =>
+	typeof row === 'object' &&
+	row !== null &&
+	(row as MemberRow).type === 'MEMBER' &&
+	typeof (row as MemberRow).userId === 'string'
 
 export function freeze(): FreezeResult {
 	if (snapshot) return 'already'
 	if (!started) return 'not-ready'
 
-	const guildId = currentGuildId()
-	const channelId = currentChannelId()
+	const guildId = selectedId('SelectedGuildStore')
+	const channelId = selectedId('SelectedChannelStore')
 	if (!guildId || !channelId) return 'no-server'
 
-	const members = store('ChannelMemberStore')
-	const presence = store('PresenceStore')
+	const members = readStore<ChannelMemberStore>('ChannelMemberStore')
+	const presence = readStore<PresenceStore>('PresenceStore')
 	if (!members || !presence) return 'not-ready'
 
-	// Original getProps (not the patched one: nothing is frozen yet, so both are the same)
-	const props = members.getProps(guildId, channelId) as ListProps | undefined
+	// Nothing is frozen yet, so this is the same as the original getProps
+	const props = members.getProps(guildId, channelId)
 	if (!props || !Array.isArray(props.rows) || typeof props.listId !== 'string')
 		return 'no-list'
 
-	const rows = props.rows.slice()
-	const frozenProps: ListProps = {
-		...props,
-		groups: Array.isArray(props.groups) ? props.groups.slice() : [],
-		// Row objects are copied too, in case the store edits them in place
-		rows: rows.map(r => (r && typeof r === 'object' ? { ...(r as object) } : r)),
-	}
-
-	const snap = new Map<string, PresenceSnapshot>()
-	for (const row of rows) {
-		if (!isMemberRow(row) || snap.has(row.userId)) continue
+	const memberPresence = new Map<string, MemberPresence>()
+	for (const row of props.rows) {
+		if (!isMemberRow(row) || memberPresence.has(row.userId)) continue
 		const id = row.userId
-		snap.set(id, {
+		memberPresence.set(id, {
 			status: presence.getStatus(id),
 			mobile: presence.isMobileOnline(id),
 			vr: presence.isVROnline(id),
@@ -156,11 +175,16 @@ export function freeze(): FreezeResult {
 
 	snapshot = {
 		guildId,
-		channelId,
 		listId: props.listId,
-		props: frozenProps,
-		presence: snap,
-		takenAt: Date.now(),
+		props: {
+			...props,
+			groups: Array.isArray(props.groups) ? props.groups.slice() : [],
+			// Rows are copied too, in case the store edits them in place
+			rows: props.rows.map(row =>
+				typeof row === 'object' && row !== null ? { ...row } : row,
+			),
+		},
+		presence: memberPresence,
 	}
 
 	refreshList()
@@ -176,29 +200,19 @@ export function unfreeze() {
 }
 
 export function toggle(): FreezeResult | 'unfrozen' {
-	if (snapshot) {
-		unfreeze()
-		return 'unfrozen'
-	}
-	return freeze()
+	if (!snapshot) return freeze()
+	unfreeze()
+	return 'unfrozen'
 }
 
-/** True while the app is processing the member list event, so the member store reads live presence. */
-function inListUpdateDispatch() {
-	try {
-		return (Dispatcher as any)._currentDispatchActionType === LIST_UPDATE_EVENT
-	} catch {
-		return false
-	}
-}
-
-/** Presence of a frozen user, or undefined when this read must stay live. */
-function frozenPresence(userId: unknown): PresenceSnapshot | undefined {
+/** Presence of a frozen member, or undefined when this read must stay live. */
+function frozenPresence(userId: unknown): MemberPresence | undefined {
 	if (!snapshot || typeof userId !== 'string') return
 	const entry = snapshot.presence.get(userId)
 	if (!entry) return
-	if (currentGuildId() !== snapshot.guildId) return
-	if (inListUpdateDispatch()) return
+	// Only the frozen server, and never while the app is processing the list update itself
+	if (selectedId('SelectedGuildStore') !== snapshot.guildId) return
+	if (Dispatcher._currentDispatchActionType === LIST_UPDATE_EVENT) return
 	return entry
 }
 
@@ -216,42 +230,52 @@ export function startFreeze(cleanup: (...fns: Array<() => unknown>) => void) {
 	})
 
 	cleanup(
-		getStore('ChannelMemberStore', (members: any) => {
+		getStore('ChannelMemberStore', (members: ChannelMemberStore) => {
 			cleanup(
-				instead(members, 'getProps', function (this: unknown, args: any[], orig: any) {
-					const result = Reflect.apply(orig, this, args) as ListProps | undefined
-					if (!snapshot) return result
-					if (result && result.listId === snapshot.listId) return snapshot.props
-					return result
+				instead(members, 'getProps', function (args, original) {
+					const result = Reflect.apply(original, this, args) as
+						| MemberListProps
+						| undefined
+					return snapshot && result?.listId === snapshot.listId
+						? snapshot.props
+						: result
 				}),
 			)
 		}),
 	)
 
 	cleanup(
-		getStore('PresenceStore', (presence: any) => {
-			const patch = (
-				method: string,
-				pick: (entry: PresenceSnapshot, args: any[]) => unknown,
-			) => {
-				if (typeof presence[method] !== 'function') {
-					return
-				}
+		getStore('PresenceStore', (presence: PresenceStore) => {
+			const picks: Array<
+				[
+					PatchedPresenceMethod,
+					(entry: MemberPresence, args: unknown[]) => unknown,
+				]
+			> = [
+				['getStatus', entry => entry.status],
+				['isMobileOnline', entry => entry.mobile],
+				['isVROnline', entry => entry.vr],
+				['getPrimaryActivity', entry => entry.primary],
+				[
+					'getActivities',
+					(entry, args) =>
+						args[1] != null && args[1] === snapshot?.guildId
+							? entry.guildActivities
+							: entry.activities,
+				],
+			]
+
+			for (const [method, pick] of picks) {
+				if (typeof presence[method] !== 'function') continue
 				cleanup(
-					instead(presence, method, function (this: unknown, args: any[], orig: any) {
-						const entry = snapshot && frozenPresence(args[0])
-						return entry ? pick(entry, args) : Reflect.apply(orig, this, args)
+					instead(presence, method, function (args, original) {
+						const entry = frozenPresence(args[0])
+						return entry
+							? pick(entry, args)
+							: Reflect.apply(original, this, args)
 					}),
 				)
 			}
-
-			patch('getStatus', e => e.status)
-			patch('isMobileOnline', e => e.mobile)
-			patch('isVROnline', e => e.vr)
-			patch('getPrimaryActivity', e => e.primary)
-			patch('getActivities', (e, args) =>
-				args[1] != null && args[1] === snapshot?.guildId ? e.guildActivities : e.activities,
-			)
 		}),
 	)
 }
