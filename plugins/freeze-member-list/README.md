@@ -5,7 +5,7 @@
 Freezes the member list of the open server. Each member's online or offline status and position stay as they were when you froze the list.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugin-5865F2?logo=discord&logoColor=white)
-![Version](https://img.shields.io/badge/version-1.0.3-2ea44f)
+![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)
 ![Type](https://img.shields.io/badge/type-JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -68,7 +68,6 @@ Discord builds the member list from two sources: the structure of the list and t
 - The list structure comes from `ChannelMemberStore.getProps`. While frozen, it returns the stored copy.
 - Status, mobile and VR flags, and activities come from `PresenceStore` getters. While frozen, they return the stored values only for members in the snapshot, only on the frozen server, and outside the member list update dispatch.
 - The freeze state exists only in memory. Only the button's position and visibility are saved, through `jsonStorage`.
-- The button colors are Discord's own semantic color tokens, so they follow the active theme.
 - All patches are registered with cleanup, so disabling the plugin restores the original behavior.
 - The plugin makes no network requests of its own.
 
@@ -100,7 +99,7 @@ Discord builds the member list from two sources: the structure of the list and t
 | Field | Value |
 |---|---|
 | ID | `axonyum.freeze-member-list` |
-| Version | `1.0.3` |
+| Version | `1.0.1` |
 | Type | JavaScript |
 | Dependencies | `valenced.api` (`>=1 <2`), `discord` (any version) |
 
