@@ -114,6 +114,30 @@
         }
       }
     },
+    "axonyum.infinite-gifs": {
+      "name": "Infinite GIFs",
+      "description": "Keeps loading new GIFs as you scroll the native GIF picker. Works with Discord's built-in provider and GIF Providers.",
+      "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+      "icon": "GifIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.infinite-gifs@1.0.0.zip",
+          "sha256": "ce41b238a1b7fb1a6f84e3153b5f3a95138f01cb47a35968b220ebd93f5eaa41",
+          "size": 7035,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
+    },
     "axonyum.selectable-profiles": {
       "name": "Selectable Profiles",
       "description": "Long-press profile text to select and copy it: display name, pronouns, status and bio. Each field can be turned on or off in the settings.",
