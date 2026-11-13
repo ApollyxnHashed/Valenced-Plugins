@@ -1,6 +1,6 @@
 {
 	"format": 1,
-	"id": "axonyum.infinite-gif-scroll",
+	"id": "axonyum.infinite-gifs",
 	"name": "Infinite GIFs",
 	"description": "Keeps loading new GIFs as you scroll the native GIF picker. Works with Discord's built-in provider and GIF Providers.",
 	"author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
