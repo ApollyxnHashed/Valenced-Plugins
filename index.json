@@ -90,30 +90,6 @@
         }
       }
     },
-    "axonyum.infinite-gif-scroll": {
-      "name": "Infinite GIFs",
-      "description": "Keeps loading new GIFs as you scroll the native GIF picker. Works with Discord's built-in provider and GIF Providers.",
-      "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
-      "icon": "GifIcon",
-      "channels": {
-        "latest": "1.0.0"
-      },
-      "versions": {
-        "1.0.0": {
-          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.infinite-gif-scroll@1.0.0.zip",
-          "sha256": "8106ef8583b79cc6bdbdbf4eb44f440c73f9a19fd8e6175bb6d24bff3fa8addc",
-          "size": 7038,
-          "dependencies": {
-            "valenced.api": {
-              "version": ">=1 <2"
-            },
-            "discord": {
-              "version": "*"
-            }
-          }
-        }
-      }
-    },
     "axonyum.infinite-gifs": {
       "name": "Infinite GIFs",
       "description": "Keeps loading new GIFs as you scroll the native GIF picker. Works with Discord's built-in provider and GIF Providers.",
