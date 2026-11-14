@@ -111,6 +111,6 @@ Discord builds the member list from two sources: the structure of the list and t
 
 <div align="center">
 
-[⬅️ Back to repository](../../README.md)
+[⬅️ Back to repository](https://github.com/ApollyxnHashed/Valenced-Plugins)
 
 </div>

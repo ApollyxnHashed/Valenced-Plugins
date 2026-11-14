@@ -90,6 +90,6 @@ Discord does not expose a stable component for the display name, pronouns and st
 
 <div align="center">
 
-[⬅️ Back to repository](../../README.md)
+[⬅️ Back to repository](https://github.com/ApollyxnHashed/Valenced-Plugins)
 
 </div>

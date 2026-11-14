@@ -6,7 +6,7 @@ Plugins for [Valenced](https://valenced.app/), a client mod for the Discord mobi
 Each one solves an everyday annoyance.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugins-5865F2?logo=discord&logoColor=white)
-![Plugins](https://img.shields.io/badge/plugins-3-2ea44f)
+![Plugins](https://img.shields.io/badge/plugins-4-2ea44f)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)
 
@@ -20,7 +20,7 @@ This repository contains the plugins I create for Valenced. Each folder inside [
 
 ## 💡 Why this repository exists
 
-The Discord mobile app has a few everyday friction points: a member list that keeps reordering, profile text that can't be copied, and an emoji button that disappears in some fields. Each plugin in this repository targets one of them.
+The Discord mobile app has a few everyday friction points: a member list that keeps reordering, profile text that can't be copied, an emoji button that disappears in some fields, and a GIF picker that stops after the first page. Each plugin in this repository targets one of them.
 
 ## 🧩 Plugins
 
@@ -29,6 +29,7 @@ The Discord mobile app has a few everyday friction points: a member list that ke
 | ❄️ | [**Freeze Member List**](plugins/freeze-member-list/README.md) | Freezes the member list of the open server. | JavaScript | `1.0.1` |
 | ✏️ | [**Selectable Profiles**](plugins/selectable-profiles/README.md) | Lets you select and copy the display name, pronouns, status and bio on a profile. | JavaScript | `1.0.1` |
 | 😀 | [**Chat Emoji Compatibility**](plugins/chat-emoji-compatibility/README.md) | Restores the keyboard emoji button in fields where Discord hides it. | Kotlin | `1.0.2` |
+| ♾️ | [**Infinite GIFs**](plugins/infinite-gifs/README.md) | Keeps loading new GIFs as you scroll the GIF picker. | JavaScript | `1.0.0` |
 
 ## 📦 Installation
 
@@ -53,7 +54,8 @@ Valenced-Plugins/
 ├── plugins/
 │   ├── freeze-member-list/          ❄️  freezes the member list (JavaScript)
 │   ├── selectable-profiles/         ✏️  text selection on profiles (JavaScript)
-│   └── chat-emoji-compatibility/    😀  emoji button in blocked fields (Kotlin)
+│   ├── chat-emoji-compatibility/    😀  emoji button in blocked fields (Kotlin)
+│   └── infinite-gifs/               ♾️  endless scrolling in the GIF picker (JavaScript)
 ├── themes/                          🎨  themes (empty for now)
 ├── .github/                         ⚙️  workflows and publishing scripts
 ├── repo.config.json                 🧾  repository name and channels
@@ -79,8 +81,3 @@ Distributed under the GNU General Public License v3.0. See [LICENSE](LICENSE).
 - Discord: `axonyum`
 - GitHub: [ApollyxnHashed](https://github.com/ApollyxnHashed)
 - Questions about Valenced itself: [official Valenced community](https://discord.com/invite/dtBTQHYSx4)
-
-## 🙏 Credits
-
-- [Valenced](https://valenced.app/) for the mod and the plugin platform.
-- [Twemoji](https://github.com/twitter/twemoji) for the snowflake icon used by Freeze Member List (CC-BY 4.0).

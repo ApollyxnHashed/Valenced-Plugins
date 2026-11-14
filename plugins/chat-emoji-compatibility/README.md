@@ -74,6 +74,6 @@ When a text field creates its connection to the keyboard, the plugin checks the 
 
 <div align="center">
 
-[⬅️ Back to repository](../../README.md)
+[⬅️ Back to repository](https://github.com/ApollyxnHashed/Valenced-Plugins)
 
 </div>
