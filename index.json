@@ -150,6 +150,33 @@
           }
         }
       }
+    },
+    "axonyum.wait-for-slot": {
+      "name": "Wait for Slot",
+      "description": "Joins a full voice channel for you the moment someone leaves and a slot opens.",
+      "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+      "contributors": [
+        "adrian <224617799434108928>"
+      ],
+      "icon": "VoiceNormalIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.wait-for-slot@1.0.0.zip",
+          "sha256": "d08e90f51bf256fd97c77247ea25ba200317c0e8690ce1f93a2e795db174cc27",
+          "size": 2398,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
     }
   }
 }
