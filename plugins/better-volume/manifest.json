@@ -1,0 +1,21 @@
+{
+	"format": 1,
+	"id": "axonyum.better-volume",
+	"name": "Better Volume",
+	"description": "Set a user's call volume with +/- buttons or by typing a number, and go above the stock 200% limit.",
+	"author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+	"contributors": ["Zerthox"],
+	"icon": "VoiceNormalIcon",
+	"version": "1.0.0",
+	"dependencies": {
+		"valenced.api": {
+			"version": ">=1 <2"
+		},
+		"discord": {
+			"version": "*"
+		}
+	},
+	"dist": {
+		"script": "index.js"
+	}
+}

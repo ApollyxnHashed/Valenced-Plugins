@@ -6,7 +6,7 @@ Plugins for [Valenced](https://valenced.app/), a client mod for the Discord mobi
 Each one solves an everyday annoyance.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugins-5865F2?logo=discord&logoColor=white)
-![Plugins](https://img.shields.io/badge/plugins-5-2ea44f)
+![Plugins](https://img.shields.io/badge/plugins-6-2ea44f)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)
 
@@ -30,6 +30,7 @@ The Discord mobile app has a few everyday friction points: a member list that ke
 | ✏️ | [**Selectable Profiles**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/selectable-profiles) | Lets you select and copy the display name, pronouns, status and bio on a profile. | JavaScript | `1.0.1` |
 | 😀 | [**Chat Emoji Compatibility**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/chat-emoji-compatibility) | Restores the keyboard emoji button in fields where Discord hides it. | Kotlin | `1.0.2` |
 | ♾️ | [**Infinite GIFs**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/infinite-gifs) | Keeps loading new GIFs as you scroll the GIF picker. | JavaScript | `1.0.0` |
+| 🎚️ | [**Better Volume**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/better-volume) | Exact volume controls for users in a call, with a limit above 200%. | JavaScript | `1.0.0` |
 | 🔊 | [**Wait for Slot**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/wait-for-slot) | Joins a full voice channel for you the moment a slot opens. | JavaScript | `1.0.0` |
 
 ## 📦 Installation
@@ -53,6 +54,7 @@ Some plugins may ask for an app reload to apply their changes. Their card shows 
 ```
 Valenced-Plugins/
 ├── plugins/
+│   ├── better-volume/               🎚️  exact volume controls above 200% (JavaScript)
 │   ├── freeze-member-list/          ❄️  freezes the member list (JavaScript)
 │   ├── selectable-profiles/         ✏️  text selection on profiles (JavaScript)
 │   ├── chat-emoji-compatibility/    😀  emoji button in blocked fields (Kotlin)
