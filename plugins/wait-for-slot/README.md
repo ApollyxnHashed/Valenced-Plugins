@@ -81,7 +81,7 @@ flowchart LR
 
 ## 🙏 Credits
 
-- The original **Wait For Slot** plugin for Unbound, by adrian. This is a port to Valenced.
+- The original **Wait For Slot** plugin for Unbound, by [adrian](https://unbound.rip/addons/unbound.wait-for-slot). This is a port to Valenced.
 
 ---
 
