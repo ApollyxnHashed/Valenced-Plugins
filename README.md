@@ -30,7 +30,7 @@ The Discord mobile app has a few everyday friction points: a member list that ke
 | ✏️ | [**Selectable Profiles**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/selectable-profiles) | Lets you select and copy the display name, pronouns, status and bio on a profile. | JavaScript | `1.0.1` |
 | 😀 | [**Chat Emoji Compatibility**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/chat-emoji-compatibility) | Restores the keyboard emoji button in fields where Discord hides it. | Kotlin | `1.0.2` |
 | ♾️ | [**Infinite GIFs**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/infinite-gifs) | Keeps loading new GIFs as you scroll the GIF picker. | JavaScript | `1.0.0` |
-| 🎧 | [**Wait for Slot**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/wait-for-slot) | Joins a full voice channel for you the moment a slot opens. | JavaScript | `1.0.0` |
+| 🔊 | [**Wait for Slot**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/wait-for-slot) | Joins a full voice channel for you the moment a slot opens. | JavaScript | `1.0.0` |
 
 ## 📦 Installation
 
