@@ -3,6 +3,33 @@
   "name": "Axonyum's Plugins",
   "description": "Valenced plugins created by Axonyum.",
   "plugins": {
+    "axonyum.better-volume": {
+      "name": "Better Volume",
+      "description": "Set a user's call volume with +/- buttons or by typing a number, and go above the stock 200% limit.",
+      "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+      "contributors": [
+        "Zerthox"
+      ],
+      "icon": "VoiceNormalIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.better-volume@1.0.0.zip",
+          "sha256": "16f5f56bd0900655bfe484ea87ae2ff485488cb7f86d8e87f3e605e6dda84d14",
+          "size": 3236,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
+    },
     "axonyum.chat-emoji-compatibility": {
       "name": "Chat Emoji Compatibility",
       "description": "Lets the keyboard emoji button work in Discord fields that block it, such as the channel name editor.",
