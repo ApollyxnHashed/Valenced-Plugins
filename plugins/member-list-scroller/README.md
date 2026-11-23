@@ -5,7 +5,7 @@
 A draggable scroll handle for the member list, so you can jump through very long lists with your thumb.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugin-5865F2?logo=discord&logoColor=white)
-![Version](https://img.shields.io/badge/version-1.0.0-2ea44f)
+![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)
 ![Type](https://img.shields.io/badge/type-JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -47,6 +47,7 @@ flowchart LR
 - The conversion uses the row and section header heights from Discord's own `useScaledRowHeight` and `useScaledSectionHeight` hooks (they grow with the font size), scaled to the content length the list reports.
 - The list is replaced by a small host component through a JSX patch (`insteadJSX`). The host renders the original list unchanged and draws the bar beside it, over its right edge. All original props, refs and listeners keep working.
 - The server list is recognized by its key (`guild-channel-user-list`). Group and thread lists are recognized by their props. Friends, search, share lists and lists inside action sheets are left alone.
+- The list the host renders is marked, so the patch never wraps it again. A safety net also stops wrapping if a list ever re-renders in a loop.
 - Only the bar captures touches (`PanResponder`), so opening profiles and normal swiping are unaffected.
 - Turning the plugin off removes the patch and hides the bar.
 
@@ -66,16 +67,22 @@ flowchart LR
 | `js/index.tsx` | Plugin entry and the patch on the member list |
 | `js/host.tsx` | Renders the list and the bar, and scrolls the list |
 | `js/thumb.tsx` | The draggable bar and the position bubble |
+| `js/match.ts` | Decides which lists get a bar, and never wraps the same list twice |
 | `js/layout.ts` | Math that turns a position into a section and a member |
 | `js/model.ts` | Scroll state shared between the list and the bar |
 | `tsconfig.json` | Type-checking configuration |
+
+## 📝 Changelog
+
+- **1.0.1**: fixed a freeze when opening the group chat or direct message user view.
+- **1.0.0**: first release.
 
 ## 🏷️ Plugin information
 
 | Field | Value |
 |---|---|
 | ID | `axonyum.member-list-scroller` |
-| Version | `1.0.0` |
+| Version | `1.0.1` |
 | Type | JavaScript |
 | Dependencies | `valenced.api` (`>=1 <2`), `discord` (any version) |
 

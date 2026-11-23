@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { buildLayout, fractionToOffset, lastLocation, locate } from './layout'
+import { HOSTED_PROP } from './match'
 import { createScrollModel, useHeightHooks } from './model'
 import { SafeBoundary, ScrollThumb } from './thumb'
 import type { ComponentType } from 'react'
@@ -203,6 +204,7 @@ export function ScrollerHost({ List, listProps }: HostProps) {
 		<>
 			<List
 				{...listProps}
+				{...{ [HOSTED_PROP]: true }}
 				ref={setRef}
 				onScroll={onScroll}
 				onLayout={onLayout}

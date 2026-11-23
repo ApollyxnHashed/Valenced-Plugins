@@ -1,19 +1,15 @@
 import { getModuleWithImportedPath } from '@valenced/discord/utils/modules/finders'
 import { insteadJSX } from '@valenced/react/jsx-runtime'
 import { ScrollerHost } from './host'
+import { isMemberList } from './match'
 import { setEnabled, setHeightHook } from './model'
 import type { ComponentType } from 'react'
 import type { UsersListProps } from './host'
 
-const USERS_LIST_PATH =
-	'modules/main_tabs_v2/native/shared_components/user_list/UsersFastList.tsx'
-const ROW_HEIGHT_PATH =
-	'modules/main_tabs_v2/native/shared_components/user_list/useScaledRowHeight.tsx'
-const SECTION_HEIGHT_PATH =
-	'modules/main_tabs_v2/native/shared_components/user_list/useScaledSectionHeight.tsx'
-
-/** Key Discord gives the server member list (and its search results) when it renders UsersFastList. */
-const GUILD_LIST_KEY_PREFIX = 'guild-channel-user-list'
+const USER_LIST_DIR = 'modules/main_tabs_v2/native/shared_components/user_list'
+const USERS_LIST_PATH = `${USER_LIST_DIR}/UsersFastList.tsx`
+const ROW_HEIGHT_PATH = `${USER_LIST_DIR}/useScaledRowHeight.tsx`
+const SECTION_HEIGHT_PATH = `${USER_LIST_DIR}/useScaledSectionHeight.tsx`
 
 interface UsersListModule {
 	UsersFastList?: ComponentType<UsersListProps>
@@ -22,21 +18,9 @@ interface HeightHookModule {
 	default?: () => number
 }
 
-/**
- * Which UsersFastList renders are member lists.
- * The server list is told apart by its key. The group chat and thread lists (rendered in the same
- * panel) are the ones that hide the background overlay and take a list style override. Friends,
- * search and share lists do neither, and lists inside action sheets are left alone.
- */
-function isMemberList(props: UsersListProps, key: unknown) {
-	if (!Array.isArray(props.sections) || props.inActionSheet === true)
-		return false
-	if (typeof key === 'string' && key.startsWith(GUILD_LIST_KEY_PREFIX))
-		return true
-	return (
-		props.disableBackgroundOverlay === true && props.listStyleOverride != null
-	)
-}
+/** More wraps than this within WINDOW_MS means a render loop: wrapping stops until the plugin restarts. */
+const MAX_WRAPS = 120
+const WINDOW_MS = 1000
 
 export default plugin({
 	start({ cleanup, logger }) {
@@ -67,11 +51,27 @@ export default plugin({
 					},
 				)
 
+				let windowStart = 0
+				let wraps = 0
+				let tripped = false
+
 				cleanup(
 					insteadJSX(UsersFastList, ([type, props, key], jsx) => {
-						// The host renders the list again without a key, which comes through here untouched
-						if (!isMemberList(props as UsersListProps, key))
+						if (tripped || !isMemberList(props as UsersListProps, key))
 							return jsx(type, props, key)
+
+						// Safety net: if the list ever renders itself in a loop, give it back to Discord untouched
+						const now = Date.now()
+						if (now - windowStart > WINDOW_MS) {
+							windowStart = now
+							wraps = 0
+						}
+						if (++wraps > MAX_WRAPS) {
+							tripped = true
+							logger.warn('Render loop detected: lists are no longer wrapped')
+							return jsx(type, props, key)
+						}
+
 						return jsx(
 							ScrollerHost,
 							{ List: type, listProps: props as UsersListProps },

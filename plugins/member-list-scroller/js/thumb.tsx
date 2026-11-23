@@ -119,7 +119,7 @@ export function ScrollThumb({ model, controller }: ThumbProps) {
 	// The responder is created once, so it reads the latest values from here
 	const live = useRef({ range, restingTop, controller })
 	live.current = { range, restingTop, controller }
-	const drag = useRef({ startTop: 0 })
+	const startTop = useRef(0)
 
 	const end = () => {
 		setDragging(false)
@@ -134,14 +134,14 @@ export function ScrollThumb({ model, controller }: ThumbProps) {
 			onPanResponderTerminationRequest: () => false,
 			onShouldBlockNativeResponder: () => true,
 			onPanResponderGrant: () => {
-				drag.current.startTop = live.current.restingTop
+				startTop.current = live.current.restingTop
 				setDragTop(live.current.restingTop)
 				setDragging(true)
 			},
 			onPanResponderMove: (_event, gesture) => {
 				const { range, controller } = live.current
 				if (!(range > 0)) return
-				const next = clamp(drag.current.startTop + gesture.dy, 0, range)
+				const next = clamp(startTop.current + gesture.dy, 0, range)
 				setDragTop(next)
 				const reached = controller.scrollToFraction(next / range)
 				if (reached) setBubble(`${reached.index + 1} / ${reached.total}`)

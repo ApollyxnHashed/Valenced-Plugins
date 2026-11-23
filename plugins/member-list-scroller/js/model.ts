@@ -67,29 +67,38 @@ export function useScrollModel(model: ScrollModel) {
 	return model.state
 }
 
+/** A value shared by every list, with a hook that re-renders the caller when it changes. */
+function createSignal<T>(initial: T) {
+	let value = initial
+	const listeners = new Set<() => void>()
+
+	return {
+		set(next: T) {
+			if (Object.is(next, value)) return
+			value = next
+			for (const listener of listeners) listener()
+		},
+		get: () => value,
+		use() {
+			const reRender = useReRender()
+			useEffect(() => {
+				listeners.add(reRender)
+				return () => {
+					listeners.delete(reRender)
+				}
+			}, [reRender])
+			return value
+		},
+	}
+}
+
 /*
  * Whether the plugin is running. The patched list stays mounted until its parent renders
  * again, so disabling the plugin hides the handles instead of tearing the list down.
  */
-let enabled = false
-const enabledListeners = new Set<() => void>()
-
-export function setEnabled(value: boolean) {
-	if (enabled === value) return
-	enabled = value
-	for (const listener of enabledListeners) listener()
-}
-
-export function useEnabled() {
-	const reRender = useReRender()
-	useEffect(() => {
-		enabledListeners.add(reRender)
-		return () => {
-			enabledListeners.delete(reRender)
-		}
-	}, [reRender])
-	return enabled
-}
+const enabled = createSignal(false)
+export const setEnabled = enabled.set
+export const useEnabled = enabled.use
 
 /*
  * Discord's own hooks for the row and section header heights (they grow with the font size).
@@ -103,25 +112,10 @@ export interface HeightHooks {
 	version: number
 }
 
-let heightHooks: HeightHooks = { version: 0 }
-const heightListeners = new Set<() => void>()
+const heightHooks = createSignal<HeightHooks>({ version: 0 })
+export const useHeightHooks = heightHooks.use
 
 export function setHeightHook(kind: 'row' | 'section', hook: () => number) {
-	heightHooks = {
-		...heightHooks,
-		[kind]: hook,
-		version: heightHooks.version + 1,
-	}
-	for (const listener of heightListeners) listener()
-}
-
-export function useHeightHooks() {
-	const reRender = useReRender()
-	useEffect(() => {
-		heightListeners.add(reRender)
-		return () => {
-			heightListeners.delete(reRender)
-		}
-	}, [reRender])
-	return heightHooks
+	const current = heightHooks.get()
+	heightHooks.set({ ...current, [kind]: hook, version: current.version + 1 })
 }
