@@ -141,6 +141,30 @@
         }
       }
     },
+    "axonyum.member-list-scroller": {
+      "name": "Member List Scroller",
+      "description": "Adds a draggable scroll handle to the member list, so you can jump through very long lists with your thumb.",
+      "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
+      "icon": "ArrowsUpDownIcon",
+      "channels": {
+        "latest": "1.0.0"
+      },
+      "versions": {
+        "1.0.0": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.member-list-scroller@1.0.0.zip",
+          "sha256": "1d34a7bc31950907b798274b37918127f2d3dbf10b0104fce802eb876fd46740",
+          "size": 4495,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        }
+      }
+    },
     "axonyum.selectable-profiles": {
       "name": "Selectable Profiles",
       "description": "Long-press profile text to select and copy it: display name, pronouns, status and bio. Each field can be turned on or off in the settings.",
