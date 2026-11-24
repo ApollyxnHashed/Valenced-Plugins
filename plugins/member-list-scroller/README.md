@@ -2,10 +2,10 @@
 
 # ↕️ Member List Scroller
 
-A draggable scroll handle for the member list, so you can jump through very long lists with your thumb.
+A draggable scroll handle for the server member list, so you can jump through very long lists with your thumb.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugin-5865F2?logo=discord&logoColor=white)
-![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)
+![Version](https://img.shields.io/badge/version-1.0.2-2ea44f)
 ![Type](https://img.shields.io/badge/type-JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -19,7 +19,7 @@ In a server with thousands of members, reaching the bottom of the member list me
 
 ## ✨ Usage
 
-Open the member list of a server, group or thread. A thin bar appears at the right edge.
+Open the member list of a server. A thin bar appears at the right edge.
 
 | Action | What happens |
 |---|---|
@@ -46,8 +46,7 @@ flowchart LR
 - The member list is a native virtualized list (`UsersFastList`). It only offers `scrollToTop` and `scrollToLocation(section, item)`, never a pixel offset, so the handle position is converted into a section and an item.
 - The conversion uses the row and section header heights from Discord's own `useScaledRowHeight` and `useScaledSectionHeight` hooks (they grow with the font size), scaled to the content length the list reports.
 - The list is replaced by a small host component through a JSX patch (`insteadJSX`). The host renders the original list unchanged and draws the bar beside it, over its right edge. All original props, refs and listeners keep working.
-- The server list is recognized by its key (`guild-channel-user-list`). Group and thread lists are recognized by their props. Friends, search, share lists and lists inside action sheets are left alone.
-- The list the host renders is marked, so the patch never wraps it again. A safety net also stops wrapping if a list ever re-renders in a loop.
+- Only the server member list is recognized, by its key (`guild-channel-user-list`). Every other list (group chats, direct message user views, threads, friends, search, share lists, action sheets) is rendered by Discord untouched, with no handle created.
 - Only the bar captures touches (`PanResponder`), so opening profiles and normal swiping are unaffected.
 - Turning the plugin off removes the patch and hides the bar.
 
@@ -67,13 +66,14 @@ flowchart LR
 | `js/index.tsx` | Plugin entry and the patch on the member list |
 | `js/host.tsx` | Renders the list and the bar, and scrolls the list |
 | `js/thumb.tsx` | The draggable bar and the position bubble |
-| `js/match.ts` | Decides which lists get a bar, and never wraps the same list twice |
+| `js/match.ts` | Decides which list gets a bar (the server member list only) |
 | `js/layout.ts` | Math that turns a position into a section and a member |
 | `js/model.ts` | Scroll state shared between the list and the bar |
 | `tsconfig.json` | Type-checking configuration |
 
 ## 📝 Changelog
 
+- **1.0.2**: the handle is now created only in server member lists.
 - **1.0.1**: fixed a freeze when opening the group chat or direct message user view.
 - **1.0.0**: first release.
 
@@ -82,7 +82,7 @@ flowchart LR
 | Field | Value |
 |---|---|
 | ID | `axonyum.member-list-scroller` |
-| Version | `1.0.1` |
+| Version | `1.0.2` |
 | Type | JavaScript |
 | Dependencies | `valenced.api` (`>=1 <2`), `discord` (any version) |
 

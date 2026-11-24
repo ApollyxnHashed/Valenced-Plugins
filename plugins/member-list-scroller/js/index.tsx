@@ -18,10 +18,6 @@ interface HeightHookModule {
 	default?: () => number
 }
 
-/** More wraps than this within WINDOW_MS means a render loop: wrapping stops until the plugin restarts. */
-const MAX_WRAPS = 120
-const WINDOW_MS = 1000
-
 export default plugin({
 	start({ cleanup, logger }) {
 		setEnabled(true)
@@ -51,26 +47,11 @@ export default plugin({
 					},
 				)
 
-				let windowStart = 0
-				let wraps = 0
-				let tripped = false
-
 				cleanup(
 					insteadJSX(UsersFastList, ([type, props, key], jsx) => {
-						if (tripped || !isMemberList(props as UsersListProps, key))
+						// Everything else (group chats, DM user views, threads, friends, share lists) is rendered as Discord does
+						if (!isMemberList(props as UsersListProps, key))
 							return jsx(type, props, key)
-
-						// Safety net: if the list ever renders itself in a loop, give it back to Discord untouched
-						const now = Date.now()
-						if (now - windowStart > WINDOW_MS) {
-							windowStart = now
-							wraps = 0
-						}
-						if (++wraps > MAX_WRAPS) {
-							tripped = true
-							logger.warn('Render loop detected: lists are no longer wrapped')
-							return jsx(type, props, key)
-						}
 
 						return jsx(
 							ScrollerHost,
