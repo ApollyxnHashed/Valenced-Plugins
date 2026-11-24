@@ -5,7 +5,7 @@
 Freezes the member list of the open server. Each member's online or offline status and position stay as they were when you froze the list.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugin-5865F2?logo=discord&logoColor=white)
-![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)
+![Version](https://img.shields.io/badge/version-1.0.2-2ea44f)
 ![Type](https://img.shields.io/badge/type-JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -92,20 +92,16 @@ Discord builds the member list from two sources: the structure of the list and t
 | `js/button.tsx` | Floating button: tap, drag, colors and hints |
 | `js/state.ts` | Saved settings (visibility, position) and runtime flags |
 | `js/settings.tsx` | Settings screen |
-| `js/snowflake.ts` | Snowflake icon |
+| `js/snowflake.tsx` | Snowflake icon, drawn from Discord's own emoji image |
 
 ## 🏷️ Plugin information
 
 | Field | Value |
 |---|---|
 | ID | `axonyum.freeze-member-list` |
-| Version | `1.0.1` |
+| Version | `1.0.2` |
 | Type | JavaScript |
 | Dependencies | `valenced.api` (`>=1 <2`), `discord` (any version) |
-
-## 🙏 Credits
-
-- Snowflake icon: Twemoji (`@discordapp/twemoji` 16.0.1, U+2744), licensed under [CC-BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
 ---
 

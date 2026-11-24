@@ -2,15 +2,9 @@ import { Tokens } from '@valenced/discord/common/tokens'
 import { Design } from '@valenced/discord/design'
 import { proxify } from '@valenced/utils/proxy'
 import { useEffect, useRef, useState } from 'react'
-import {
-	Image,
-	PanResponder,
-	Text,
-	useWindowDimensions,
-	View,
-} from 'react-native'
+import { PanResponder, Text, useWindowDimensions, View } from 'react-native'
 import { describeFailure, toggle, useFrozen } from './freeze'
-import { SNOWFLAKE_URI } from './snowflake'
+import { SnowflakeIcon } from './snowflake'
 import { savePosition, useSettings } from './state'
 
 const SIZE = 54
@@ -63,10 +57,6 @@ const useStyles = proxify(() => {
 			borderColor: colors.CONTROL_PRIMARY_TEXT_DEFAULT,
 			borderWidth: 3,
 			elevation: 10,
-		},
-		icon: {
-			width: ICON_SIZE,
-			height: ICON_SIZE,
 		},
 		chipWrap: {
 			position: 'absolute',
@@ -232,10 +222,9 @@ export function FloatingFreezeButton() {
 			<View
 				style={[styles.circle, frozen ? styles.circleOn : styles.circleOff]}
 			>
-				<Image
-					source={{ uri: SNOWFLAKE_URI }}
-					resizeMode="contain"
-					style={[styles.icon, !frozen && styles.iconOff]}
+				<SnowflakeIcon
+					size={ICON_SIZE}
+					style={frozen ? undefined : styles.iconOff}
 				/>
 			</View>
 			{frozen ? (
