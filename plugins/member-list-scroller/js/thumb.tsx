@@ -3,7 +3,7 @@ import { Design } from '@valenced/discord/design'
 import { proxify } from '@valenced/utils/proxy'
 import { Component, useRef, useState } from 'react'
 import { PanResponder, Text, View } from 'react-native'
-import { offsetToFraction, thumbHeight } from './layout'
+import { fractionToOffset, offsetToFraction, thumbHeight } from './layout'
 import { useEnabled, useScrollModel } from './model'
 import type { ReactNode } from 'react'
 import type { ScrollModel } from './model'
@@ -120,8 +120,19 @@ export function ScrollThumb({ model, controller }: ThumbProps) {
 	const live = useRef({ range, restingTop, controller })
 	live.current = { range, restingTop, controller }
 	const startTop = useRef(0)
+	// Where the handle was last dragged to (0 to 1), until the drag ends
+	const dragged = useRef<number | undefined>(undefined)
 
 	const end = () => {
+		// The list does not report scrolls made through scrollToLocation, so without this the handle
+		// would jump back to its old spot on release and only catch up on the next swipe of the list
+		if (dragged.current !== undefined) {
+			const { content, viewport } = model.state
+			model.set({
+				offset: fractionToOffset(dragged.current, content, viewport),
+			})
+			dragged.current = undefined
+		}
 		setDragging(false)
 		setBubble('')
 	}
@@ -143,6 +154,7 @@ export function ScrollThumb({ model, controller }: ThumbProps) {
 				if (!(range > 0)) return
 				const next = clamp(startTop.current + gesture.dy, 0, range)
 				setDragTop(next)
+				dragged.current = next / range
 				const reached = controller.scrollToFraction(next / range)
 				if (reached) setBubble(`${reached.index + 1} / ${reached.total}`)
 			},
