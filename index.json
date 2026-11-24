@@ -160,7 +160,7 @@
       "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
       "icon": "ArrowsUpDownIcon",
       "channels": {
-        "latest": "1.0.3"
+        "latest": "1.0.4"
       },
       "versions": {
         "1.0.0": {
@@ -206,6 +206,19 @@
           "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.member-list-scroller@1.0.3.zip",
           "sha256": "9a0cdbdd1c9efb7a83d0ff65d4100e9deaed1e8ffbb22eb68c7d77d2ef0b65da",
           "size": 4481,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        },
+        "1.0.4": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.member-list-scroller@1.0.4.zip",
+          "sha256": "30815de657d7d125c9c47be7eac1a405d68dae15f00b806f3485bef5d2301e03",
+          "size": 4712,
           "dependencies": {
             "valenced.api": {
               "version": ">=1 <2"
