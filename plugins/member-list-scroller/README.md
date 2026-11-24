@@ -47,6 +47,7 @@ flowchart LR
 - The conversion uses the row and section header heights from Discord's own `useScaledRowHeight` and `useScaledSectionHeight` hooks (they grow with the font size), scaled to the content length the list reports.
 - The list is replaced by a small host component through a JSX patch (`insteadJSX`). The host renders the original list unchanged and draws the bar beside it, over its right edge. All original props, refs and listeners keep working.
 - Only the server member list is recognized, by its key (`guild-channel-user-list`). Every other list (group chats, direct message user views, threads, friends, search, share lists, action sheets) is rendered by Discord untouched, with no handle created.
+- Discord decides which members to load from the list's scroll events, and the list sends none when it is scrolled through its ref. After each jump the plugin passes the matching offset to the list's original `onScroll`, so Discord loads that part of the list.
 - Only the bar captures touches (`PanResponder`), so opening profiles and normal swiping are unaffected.
 - Turning the plugin off removes the patch and hides the bar.
 
@@ -73,7 +74,7 @@ flowchart LR
 
 ## 📝 Changelog
 
-- **1.0.3**: the bar now stays where you release it, instead of going back until you swipe the list.
+- **1.0.3**: members now load while you drag the bar, so the part you jump to is not left empty. The bar stays where you release it. The bar redraws only when it actually moves, and the drag reuses its layout calculation, which cuts the work done while scrolling.
 - **1.0.2**: the handle is now created only in server member lists.
 - **1.0.1**: fixed a freeze when opening the group chat or direct message user view.
 - **1.0.0**: first release.

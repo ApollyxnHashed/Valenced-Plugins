@@ -19,8 +19,6 @@ export interface ListLayout {
 	itemTop: number[]
 	rowHeight: number
 	totalItems: number
-	/** Height of everything the model knows about, from the first header to the last row. */
-	modelHeight: number
 	/** Space above the first section (list header and start inset). */
 	top: number
 	/** Measured content versus modeled content, so the model stretches to the real list. */
@@ -93,7 +91,6 @@ export function buildLayout(input: LayoutInput): ListLayout {
 		itemTop,
 		rowHeight,
 		totalItems: items,
-		modelHeight: offset,
 		top,
 		scale,
 	}

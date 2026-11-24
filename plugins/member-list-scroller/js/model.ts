@@ -60,10 +60,24 @@ export function createScrollModel(): ScrollModel {
 	}
 }
 
-/** Re-renders the calling component whenever the model changes. */
-export function useScrollModel(model: ScrollModel) {
+/**
+ * Re-renders the calling component when `signature(state)` changes, not on every scroll event.
+ * The signature is whatever the component actually draws from the state.
+ */
+export function useScrollModel(
+	model: ScrollModel,
+	signature: (state: ScrollState) => string,
+) {
 	const reRender = useReRender()
-	useEffect(() => model.subscribe(reRender), [model, reRender])
+	useEffect(() => {
+		let last = signature(model.state)
+		return model.subscribe(() => {
+			const next = signature(model.state)
+			if (next === last) return
+			last = next
+			reRender()
+		})
+	}, [model, reRender, signature])
 	return model.state
 }
 

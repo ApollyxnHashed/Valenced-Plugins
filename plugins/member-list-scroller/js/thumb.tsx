@@ -6,7 +6,7 @@ import { PanResponder, Text, View } from 'react-native'
 import { fractionToOffset, offsetToFraction, thumbHeight } from './layout'
 import { useEnabled, useScrollModel } from './model'
 import type { ReactNode } from 'react'
-import type { ScrollModel } from './model'
+import type { ScrollModel, ScrollState } from './model'
 
 /** Width of the touch area at the right edge. Wide enough for a thumb, only as tall as the handle. */
 const HIT_WIDTH = 36
@@ -83,8 +83,11 @@ export class SafeBoundary extends Component<
 	}
 }
 
-/** Moves the list to a handle position (0 to 1). Returns the item it landed on, for the bubble. */
+/** Moves the list to a handle position (0 to 1). */
 export interface ThumbController {
+	/** A new drag starts: forget where the list was last sent. */
+	begin(): void
+	/** Returns the item the list landed on, for the bubble. */
 	scrollToFraction(
 		fraction: number,
 	): { index: number; total: number } | undefined
@@ -98,14 +101,8 @@ interface ThumbProps {
 const clamp = (n: number, min: number, max: number) =>
 	Math.min(max, Math.max(min, n))
 
-export function ScrollThumb({ model, controller }: ThumbProps) {
-	const styles = useStyles()
-	const enabled = useEnabled()
-	const { content, viewport, offset, top: listTop } = useScrollModel(model)
-	const [dragging, setDragging] = useState(false)
-	const [dragTop, setDragTop] = useState(0)
-	const [bubble, setBubble] = useState('')
-
+/** Handle size and its resting position (dp, rounded to whole pixels) for a scroll state. */
+function measure({ content, viewport, offset }: ScrollState) {
 	const height = thumbHeight(
 		viewport,
 		content,
@@ -113,8 +110,32 @@ export function ScrollThumb({ model, controller }: ThumbProps) {
 		MAX_THUMB_SHARE,
 	)
 	const range = Math.max(0, viewport - height)
-	const restingTop = range * offsetToFraction(offset, content, viewport)
-	const top = dragging ? dragTop : restingTop
+	const restingTop = Math.round(
+		range * offsetToFraction(offset, content, viewport),
+	)
+	return { height, range, restingTop }
+}
+
+/** Everything the handle draws from the scroll state: it re-renders only when this changes. */
+function signature(state: ScrollState) {
+	const { height, restingTop } = measure(state)
+	const scrollable = state.content - state.viewport > 1
+	return `${scrollable}|${state.top}|${state.viewport}|${height}|${restingTop}`
+}
+
+interface DragState {
+	top: number
+	bubble: string
+}
+
+export function ScrollThumb({ model, controller }: ThumbProps) {
+	const styles = useStyles()
+	const enabled = useEnabled()
+	const state = useScrollModel(model, signature)
+	const [drag, setDrag] = useState<DragState | undefined>()
+
+	const { height, range, restingTop } = measure(state)
+	const top = drag ? drag.top : restingTop
 
 	// The responder is created once, so it reads the latest values from here
 	const live = useRef({ range, restingTop, controller })
@@ -123,48 +144,57 @@ export function ScrollThumb({ model, controller }: ThumbProps) {
 	// Where the handle was last dragged to (0 to 1), until the drag ends
 	const dragged = useRef<number | undefined>(undefined)
 
-	const end = () => {
-		// The list does not report scrolls made through scrollToLocation, so without this the handle
-		// would jump back to its old spot on release and only catch up on the next swipe of the list
-		if (dragged.current !== undefined) {
-			const { content, viewport } = model.state
-			model.set({
-				offset: fractionToOffset(dragged.current, content, viewport),
-			})
-			dragged.current = undefined
+	const [responder] = useState(() => {
+		const end = () => {
+			// The list does not report scrolls made through scrollToLocation, so without this the handle
+			// would jump back to its old spot on release and only catch up on the next swipe of the list
+			if (dragged.current !== undefined) {
+				const { content, viewport } = model.state
+				model.set({
+					offset: fractionToOffset(dragged.current, content, viewport),
+				})
+				dragged.current = undefined
+			}
+			setDrag(undefined)
 		}
-		setDragging(false)
-		setBubble('')
-	}
 
-	const responder = useRef(
-		PanResponder.create({
+		return PanResponder.create({
 			onStartShouldSetPanResponder: () => true,
 			onMoveShouldSetPanResponder: () => true,
 			// Never hand the gesture back to the list: the list would scroll instead of the handle
 			onPanResponderTerminationRequest: () => false,
 			onShouldBlockNativeResponder: () => true,
 			onPanResponderGrant: () => {
-				startTop.current = live.current.restingTop
-				setDragTop(live.current.restingTop)
-				setDragging(true)
+				const { restingTop, controller } = live.current
+				startTop.current = restingTop
+				controller.begin()
+				setDrag({ top: restingTop, bubble: '' })
 			},
 			onPanResponderMove: (_event, gesture) => {
 				const { range, controller } = live.current
 				if (!(range > 0)) return
 				const next = clamp(startTop.current + gesture.dy, 0, range)
-				setDragTop(next)
 				dragged.current = next / range
-				const reached = controller.scrollToFraction(next / range)
-				if (reached) setBubble(`${reached.index + 1} / ${reached.total}`)
+				const reached = controller.scrollToFraction(dragged.current)
+				setDrag(previous => ({
+					top: next,
+					bubble: reached
+						? `${reached.index + 1} / ${reached.total}`
+						: (previous?.bubble ?? ''),
+				}))
 			},
 			onPanResponderRelease: end,
 			onPanResponderTerminate: end,
-		}),
-	).current
+		})
+	})
 
 	// Nothing to scroll, or sizes not measured yet
-	if (!enabled || !(viewport > 0) || !(content - viewport > 1)) return null
+	if (
+		!enabled ||
+		!(state.viewport > 0) ||
+		!(state.content - state.viewport > 1)
+	)
+		return null
 
 	// Laid over the list, in the same parent: same top and height as the list, full width so the handle can sit at the right edge
 	return (
@@ -174,8 +204,8 @@ export function ScrollThumb({ model, controller }: ThumbProps) {
 				position: 'absolute',
 				left: 0,
 				right: 0,
-				top: listTop,
-				height: viewport,
+				top: state.top,
+				height: state.viewport,
 			}}
 		>
 			<View
@@ -184,9 +214,9 @@ export function ScrollThumb({ model, controller }: ThumbProps) {
 				accessibilityLabel="Member list scroll handle"
 				style={[styles.hit, { top, height }]}
 			>
-				<View style={[styles.bar, dragging && styles.barActive]} />
+				<View style={[styles.bar, drag && styles.barActive]} />
 			</View>
-			{dragging && bubble ? (
+			{drag?.bubble ? (
 				<View
 					pointerEvents="none"
 					style={[
@@ -195,12 +225,12 @@ export function ScrollThumb({ model, controller }: ThumbProps) {
 							top: clamp(
 								top + height / 2 - BUBBLE_HEIGHT / 2,
 								0,
-								Math.max(0, viewport - BUBBLE_HEIGHT),
+								Math.max(0, state.viewport - BUBBLE_HEIGHT),
 							),
 						},
 					]}
 				>
-					<Text style={styles.bubble}>{bubble}</Text>
+					<Text style={styles.bubble}>{drag.bubble}</Text>
 				</View>
 			) : null}
 		</View>

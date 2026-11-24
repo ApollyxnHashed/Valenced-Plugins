@@ -4,6 +4,7 @@ import { createScrollModel, useHeightHooks } from './model'
 import { SafeBoundary, ScrollThumb } from './thumb'
 import type { ComponentType } from 'react'
 import type { LayoutChangeEvent } from 'react-native'
+import type { ListLayout } from './layout'
 import type { ScrollModel } from './model'
 import type { ThumbController } from './thumb'
 
@@ -102,6 +103,10 @@ export function ScrollerHost({ List, listProps }: HostProps) {
 	const handle = useRef<ListHandle | null>(null)
 	// Where the list was last sent, so a drag only scrolls when it crosses into another row
 	const lastSent = useRef<string | undefined>(undefined)
+	// The layout model of the last drag move, reused until the list or its sizes change
+	const layoutCache = useRef<{ key: string; layout: ListLayout } | undefined>(
+		undefined,
+	)
 
 	// The list hands its ref back on every render, so this keeps the original ref working too
 	const setRef = useCallback((value: ListHandle | null) => {
@@ -112,8 +117,11 @@ export function ScrollerHost({ List, listProps }: HostProps) {
 	const onScroll = useCallback(
 		(event: unknown) => {
 			const { offset, content } = readScroll(event)
-			if (typeof offset === 'number') model.set({ offset })
-			if (typeof content === 'number' && content > 0) model.set({ content })
+			model.set({
+				offset: typeof offset === 'number' ? offset : undefined,
+				content:
+					typeof content === 'number' && content > 0 ? content : undefined,
+			})
 			latest.current.onScroll?.(event)
 		},
 		[model],
@@ -138,6 +146,10 @@ export function ScrollerHost({ List, listProps }: HostProps) {
 	)
 
 	const [controller] = useState<ThumbController>(() => ({
+		begin() {
+			lastSent.current = undefined
+			layoutCache.current = undefined
+		},
 		scrollToFraction(fraction) {
 			const target = handle.current
 			const props = latest.current
@@ -161,22 +173,34 @@ export function ScrollerHost({ List, listProps }: HostProps) {
 					units > 0 && content > top ? (content - top) / units : 1
 			}
 
-			const layout = buildLayout({
-				sections: props.sections,
-				hasHeader: section => hasHeader(props, section),
-				rowHeight,
-				headerHeight: sectionHeight,
-				top,
-				contentLength: content > 0 ? content : undefined,
-			})
+			const key = `${props.sections.join(',')}|${rowHeight}|${sectionHeight}|${top}|${content}`
+			if (layoutCache.current?.key !== key)
+				layoutCache.current = {
+					key,
+					layout: buildLayout({
+						sections: props.sections,
+						hasHeader: section => hasHeader(props, section),
+						rowHeight,
+						headerHeight: sectionHeight,
+						top,
+						contentLength: content > 0 ? content : undefined,
+					}),
+				}
+			const { layout } = layoutCache.current
 
 			// Both ends are exact: the very top also shows the list header, the very bottom is clamped by the list
 			const atTop = fraction <= 0.002
+			const atBottom = fraction >= 0.998
+			const offset = fractionToOffset(
+				atTop ? 0 : atBottom ? 1 : fraction,
+				content,
+				viewport,
+			)
 			const next = atTop
 				? locate(layout, 0)
-				: fraction >= 0.998
+				: atBottom
 					? lastLocation(layout)
-					: locate(layout, fractionToOffset(fraction, content, viewport))
+					: locate(layout, offset)
 			if (!next) return undefined
 
 			const sent = atTop ? 'top' : `${next.section}:${next.item}`
@@ -191,6 +215,15 @@ export function ScrollerHost({ List, listProps }: HostProps) {
 							animated: false,
 							paddingStart: 0,
 						})
+					// The list does not report scrolls made through its ref, and Discord decides which members to
+					// load from the scroll events it receives. Without this, the rows we jump to stay empty.
+					props.onScroll?.({
+						nativeEvent: {
+							contentOffset: { x: 0, y: offset },
+							contentSize: { width: 0, height: content },
+							layoutMeasurement: { width: 0, height: viewport },
+						},
+					})
 				} catch {
 					// A list that cannot be scrolled right now: the handle just stays where it is
 				}
