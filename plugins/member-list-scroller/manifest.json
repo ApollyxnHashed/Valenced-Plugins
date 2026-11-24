@@ -4,7 +4,7 @@
 	"name": "Member List Scroller",
 	"description": "Adds a draggable scroll handle to the member list, so you can jump through very long lists with your thumb.",
 	"author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"icon": "ArrowsUpDownIcon",
 	"dependencies": {
 		"valenced.api": {

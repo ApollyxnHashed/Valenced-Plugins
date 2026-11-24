@@ -5,7 +5,7 @@
 A draggable scroll handle for the server member list, so you can jump through very long lists with your thumb.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugin-5865F2?logo=discord&logoColor=white)
-![Version](https://img.shields.io/badge/version-1.0.3-2ea44f)
+![Version](https://img.shields.io/badge/version-1.0.4-2ea44f)
 ![Type](https://img.shields.io/badge/type-JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -74,7 +74,8 @@ flowchart LR
 
 ## 📝 Changelog
 
-- **1.0.3**: members now load while you drag the bar, so the part you jump to is not left empty. The bar stays where you release it. The bar redraws only when it actually moves, and the drag reuses its layout calculation, which cuts the work done while scrolling.
+- **1.0.4**: members now load while you drag the bar, so the part you jump to is not left empty. The bar redraws only when it actually moves, and the drag reuses its layout calculation, which cuts the work done while scrolling.
+- **1.0.3**: the bar now stays where you release it, instead of going back until you swipe the list.
 - **1.0.2**: the handle is now created only in server member lists.
 - **1.0.1**: fixed a freeze when opening the group chat or direct message user view.
 - **1.0.0**: first release.
@@ -84,7 +85,7 @@ flowchart LR
 | Field | Value |
 |---|---|
 | ID | `axonyum.member-list-scroller` |
-| Version | `1.0.3` |
+| Version | `1.0.4` |
 | Type | JavaScript |
 | Dependencies | `valenced.api` (`>=1 <2`), `discord` (any version) |
 
