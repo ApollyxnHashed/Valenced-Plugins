@@ -6,7 +6,7 @@ Plugins for [Valenced](https://valenced.app/), a client mod for the Discord mobi
 Each one solves an everyday annoyance.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugins-5865F2?logo=discord&logoColor=white)
-![Plugins](https://img.shields.io/badge/plugins-7-2ea44f)
+![Plugins](https://img.shields.io/badge/plugins-8-2ea44f)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 ![Platform](https://img.shields.io/badge/platform-Android-3DDC84?logo=android&logoColor=white)
 
@@ -20,7 +20,7 @@ This repository contains the plugins I create for Valenced. Each folder inside [
 
 ## 💡 Why this repository exists
 
-The Discord mobile app has a few everyday friction points: a member list that keeps reordering and is slow to scroll, profile text that can't be copied, an emoji button that disappears in some fields, a GIF picker that stops after the first page, and full voice channels you have to keep retrying. Each plugin in this repository targets one of them.
+The Discord mobile app has a few everyday friction points: a member list that keeps reordering and is slow to scroll, profile text that can't be copied, an emoji button that disappears in some fields, a GIF picker that stops after the first page, folder colors drawn too faint, and full voice channels you have to keep retrying. Each plugin in this repository targets one of them.
 
 ## 🧩 Plugins
 
@@ -32,6 +32,7 @@ The Discord mobile app has a few everyday friction points: a member list that ke
 | ♾️ | [**Infinite GIFs**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/infinite-gifs) | Keeps loading new GIFs as you scroll the GIF picker. | JavaScript | `1.0.0` |
 | 🎚️ | [**Better Volume**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/better-volume) | Exact volume controls for users in a call, with a limit above 200%. | JavaScript | `1.0.0` |
 | 🔊 | [**Wait for Slot**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/wait-for-slot) | Joins a full voice channel for you the moment a slot opens. | JavaScript | `1.0.0` |
+| 🗂️ | [**Folder Opacity**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/folder-opacity) | Choose how opaque server folders are, up to the exact HEX color you picked. | JavaScript | `1.0.0` |
 | ↕️ | [**Member List Scroller**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/member-list-scroller) | A draggable scroll handle for the server member list. | JavaScript | `1.0.4` |
 
 ## 📦 Installation
@@ -55,6 +56,7 @@ Some plugins may ask for an app reload to apply their changes. Their card shows 
 ```
 Valenced-Plugins/
 ├── plugins/
+│   ├── folder-opacity/              🗂️  folder color opacity up to the exact HEX (JavaScript)
 │   ├── better-volume/               🎚️  exact volume controls above 200% (JavaScript)
 │   ├── freeze-member-list/          ❄️  freezes the member list (JavaScript)
 │   ├── selectable-profiles/         ✏️  text selection on profiles (JavaScript)
