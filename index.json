@@ -86,13 +86,26 @@
       "author": "axonyum <921011505263149097> (https://github.com/ApollyxnHashed \"GitHub\")",
       "icon": "FolderIcon",
       "channels": {
-        "latest": "1.0.0"
+        "latest": "1.0.1"
       },
       "versions": {
         "1.0.0": {
           "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.folder-opacity@1.0.0.zip",
           "sha256": "a5238b20d502d4592570035155646b675c6a317a9da68b3e9b8e4903a6e66ab9",
           "size": 3633,
+          "dependencies": {
+            "valenced.api": {
+              "version": ">=1 <2"
+            },
+            "discord": {
+              "version": "*"
+            }
+          }
+        },
+        "1.0.1": {
+          "url": "https://apollyxnhashed.github.io/Valenced-Plugins/pool/axonyum.folder-opacity@1.0.1.zip",
+          "sha256": "9becb119834c511b16e1974d189aaff6c2881b5a52f605d7f04c42a1bcdb2198",
+          "size": 4998,
           "dependencies": {
             "valenced.api": {
               "version": ">=1 <2"
