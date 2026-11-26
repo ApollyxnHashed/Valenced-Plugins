@@ -5,7 +5,7 @@
 Choose how opaque your server folders are, up to the exact HEX color you picked, with matching folder icon colors.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugin-5865F2?logo=discord&logoColor=white)
-![Version](https://img.shields.io/badge/version-1.1.2-2ea44f)
+![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)
 ![Type](https://img.shields.io/badge/type-JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -90,7 +90,7 @@ The folder icon is tinted with the folder color itself, which only stood out whi
 | Field | Value |
 |---|---|
 | ID | `axonyum.folder-opacity` |
-| Version | `1.1.2` |
+| Version | `1.0.1` |
 | Type | JavaScript |
 | Dependencies | `valenced.api` (`>=1 <2`), `discord` (any version) |
 
