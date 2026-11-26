@@ -1,44 +1,20 @@
 import { getAssetIdByName } from '@valenced/assets'
-import { Stores } from '@valenced/discord/flux'
 import { getModuleWithImportedPath } from '@valenced/discord/utils/modules/finders'
 import { getModules } from '@valenced/modules/finders'
-import { withProps } from '@valenced/modules/finders/filters'
 import { instead } from '@valenced/patcher'
 import { beforeJSX } from '@valenced/react/jsx-runtime'
 import { iconTintFor } from './color'
 import SettingsComponent from './settings'
-import { DefaultSettings, normalizeSettings } from './shared'
+import { DefaultSettings, FolderIconAsset, normalizeSettings } from './shared'
+import { iconColors, tokensFilter } from './tokens'
 import type { ElementType } from 'react'
 import type { Settings } from './shared'
-
-// ../discord_common/js/packages/tokens/native.tsx
-// `default.modules.mobile.<NAME>` are `{ resolve() }` tokens that `useToken` resolves on every render.
-interface ModuleToken {
-	resolve(...args: unknown[]): unknown
-}
-
-interface TokensModule {
-	RawColor: Record<string, string>
-	SemanticColor: Record<string, unknown>
-	default: {
-		colors: Record<string, object>
-		modules: {
-			mobile: Record<string, ModuleToken | undefined>
-		}
-		internal: {
-			resolveSemanticColor(theme: string, color: object): string
-		}
-	}
-}
+import type { TokensModule } from './tokens'
 
 interface IconProps {
 	source?: unknown
 	style?: { tintColor?: unknown } | null
 	[key: string]: unknown
-}
-
-interface ThemeStore {
-	theme: string
 }
 
 /**
@@ -51,12 +27,6 @@ const OpacityTokens = {
 	GUILD_FOLDER_COLOR_OPACITY: 'openOpacity',
 	GUILD_FOLDER_PREVIEW_OPACITY: 'closedOpacity',
 } as const
-
-/** Folder icon shown at the top of an expanded folder. */
-const FolderIconAsset = 'FolderIcon'
-
-/** Semantic color of the server list, which folder backgrounds are drawn over. */
-const RailColor = 'BACKGROUND_BASE_LOWEST'
 
 export default plugin<{ jsonStorage: Settings }>({
 	jsonStorage: { load: true, default: DefaultSettings },
@@ -76,7 +46,7 @@ export default plugin<{ jsonStorage: Settings }>({
 
 		cleanup(
 			getModules(
-				withProps<TokensModule>('RawColor', 'SemanticColor'),
+				tokensFilter(),
 				module => {
 					tokens = module
 
@@ -123,20 +93,14 @@ export default plugin<{ jsonStorage: Settings }>({
 							const current = settings()
 							if (current.iconMode === 'discord') return args
 
-							const { default: discord, RawColor } = tokens
-							const theme = (Stores.ThemeStore as unknown as ThemeStore).theme
-							const rail = discord.colors[RailColor]
-							const color = iconTintFor(tint, current, {
-								white: RawColor.WHITE_500!,
-								black: RawColor.BLACK_500!,
-								rail: rail
-									? discord.internal.resolveSemanticColor(theme, rail)
-									: RawColor.BLACK_500!,
-							})
+							const color = iconTintFor(tint, current, iconColors(tokens))
 							if (!color) return args
 
 							// Fresh objects: Discord memoizes the original style per folder
-							args[1] = { ...props, style: { ...props.style, tintColor: color } }
+							args[1] = {
+								...props,
+								style: { ...props.style, tintColor: color },
+							}
 							return args
 						}),
 					)

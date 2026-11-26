@@ -19,6 +19,9 @@ export const DefaultSettings: Settings = {
 	iconShift: 30,
 }
 
+/** Folder icon shown at the top of an expanded folder. */
+export const FolderIconAsset = 'FolderIcon'
+
 /** Discord's own folder opacities, in percent. */
 export const DiscordOpacity = { open: 15, closed: 40 }
 

@@ -32,7 +32,7 @@ The Discord mobile app has a few everyday friction points: a member list that ke
 | ♾️ | [**Infinite GIFs**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/infinite-gifs) | Keeps loading new GIFs as you scroll the GIF picker. | JavaScript | `1.0.0` |
 | 🎚️ | [**Better Volume**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/better-volume) | Exact volume controls for users in a call, with a limit above 200%. | JavaScript | `1.0.0` |
 | 🔊 | [**Wait for Slot**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/wait-for-slot) | Joins a full voice channel for you the moment a slot opens. | JavaScript | `1.0.0` |
-| 🗂️ | [**Folder Opacity**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/folder-opacity) | Choose how opaque server folders are, up to the exact HEX color you picked. | JavaScript | `1.0.0` |
+| 🗂️ | [**Folder Opacity**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/folder-opacity) | Choose how opaque server folders are, up to the exact HEX color you picked, with a live preview. | JavaScript | `1.1.2` |
 | ↕️ | [**Member List Scroller**](https://github.com/ApollyxnHashed/Valenced-Plugins/tree/main/plugins/member-list-scroller) | A draggable scroll handle for the server member list. | JavaScript | `1.0.4` |
 
 ## 📦 Installation

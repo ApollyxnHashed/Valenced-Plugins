@@ -3,7 +3,8 @@ import { Design } from '@valenced/discord/design'
 import { lookupGeneratedIconComponent } from '@valenced/utils/discord'
 import { useRef, useState } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
-import { DiscordOpacity, DefaultSettings, normalizeSettings } from './shared'
+import FolderPreview from './preview'
+import { DefaultSettings, DiscordOpacity, normalizeSettings } from './shared'
 import type { PluginSettingsComponent } from '@valenced/plugins/types'
 import type { ComponentProps } from 'react'
 import type { IconMode, Settings } from './shared'
@@ -37,6 +38,8 @@ interface SliderCardProps {
 	/** Value the reset button restores. */
 	defaultValue: number
 	resetLabel: string
+	/** Called on every change, even while dragging, for the live preview. */
+	onLive(value: number): void
 	onCommit(value: number): void
 }
 
@@ -54,11 +57,17 @@ function SliderCard({
 	max,
 	defaultValue,
 	resetLabel,
+	onLive,
 	onCommit,
 }: SliderCardProps) {
 	const [current, setCurrent] = useState(value)
 	const saved = useRef(value)
 	const icons = sliderIcons()
+
+	const change = (next: number) => {
+		setCurrent(next)
+		onLive(next)
+	}
 
 	// The slider reports a release under two names (see below), so skip repeats of one value
 	// to avoid saving twice
@@ -77,11 +86,11 @@ function SliderCard({
 		value: current,
 		minimumValue: min,
 		maximumValue: max,
-		onValueChange: setCurrent,
+		onValueChange: change,
 		onSlidingComplete: commit,
 		minValue: min,
 		maxValue: max,
-		onChange: setCurrent,
+		onChange: change,
 		onChangeEnd: commit,
 		startIcon: icons.start,
 		endIcon: icons.end,
@@ -109,7 +118,7 @@ function SliderCard({
 					text={resetLabel}
 					disabled={current === defaultValue}
 					onPress={() => {
-						setCurrent(defaultValue)
+						change(defaultValue)
 						commit(defaultValue)
 					}}
 				/>
@@ -161,7 +170,13 @@ const styles = StyleSheet.create({
 	content: { paddingBottom: 48 },
 })
 
-function SectionHeader({ title, subtitle }: { title: string; subtitle: string }) {
+function SectionHeader({
+	title,
+	subtitle,
+}: {
+	title: string
+	subtitle: string
+}) {
 	return (
 		<Stack spacing={4}>
 			<Text variant="heading-md/semibold" color="text-strong">
@@ -178,15 +193,26 @@ export default function SettingsComponent({
 	api: { jsonStorage: storage, plugin },
 }: SettingsComponentProps) {
 	const settings = normalizeSettings(storage.use())
+	// What the preview shows: follows the sliders while they are dragged, before anything is saved
+	const [live, setLive] = useState(settings)
+	const preview = (update: Partial<Settings>) =>
+		setLive(value =>
+			// Same object when nothing changed, so React skips the re-render
+			(Object.keys(update) as (keyof Settings)[]).every(
+				key => value[key] === update[key],
+			)
+				? value
+				: { ...value, ...update },
+		)
 
 	// Folders memoize what they read, so changes only show up after a restart
 	const save = (update: Partial<Settings>) => {
+		preview(update)
 		storage.set(update)
 		plugin.requireReload()
 	}
 
-	const shifting =
-		settings.iconMode === 'lighter' || settings.iconMode === 'darker'
+	const shifting = live.iconMode === 'lighter' || live.iconMode === 'darker'
 
 	return (
 		<ScrollView
@@ -196,6 +222,16 @@ export default function SettingsComponent({
 		>
 			<Page>
 				<Stack spacing={32}>
+					<Stack spacing={12}>
+						<SectionHeader
+							title="Preview"
+							subtitle="A sample folder that follows the settings below as you change them."
+						/>
+						<Card shadow="none" border="none">
+							<FolderPreview settings={live} />
+						</Card>
+					</Stack>
+
 					<Stack spacing={12}>
 						<SectionHeader
 							title="Opacity"
@@ -209,6 +245,7 @@ export default function SettingsComponent({
 							max={100}
 							defaultValue={DiscordOpacity.open}
 							resetLabel="Reset to Discord's default"
+							onLive={openOpacity => preview({ openOpacity })}
 							onCommit={openOpacity => save({ openOpacity })}
 						/>
 						<SliderCard
@@ -219,6 +256,7 @@ export default function SettingsComponent({
 							max={100}
 							defaultValue={DiscordOpacity.closed}
 							resetLabel="Reset to Discord's default"
+							onLive={closedOpacity => preview({ closedOpacity })}
 							onCommit={closedOpacity => save({ closedOpacity })}
 						/>
 					</Stack>
@@ -229,7 +267,7 @@ export default function SettingsComponent({
 							subtitle="The icon at the top of an open folder."
 						/>
 						<TableRadioGroup<IconMode>
-							value={settings.iconMode}
+							value={live.iconMode}
 							onChange={iconMode => save({ iconMode })}
 						>
 							{IconModes.map(mode => (
@@ -244,12 +282,13 @@ export default function SettingsComponent({
 						{shifting && (
 							<SliderCard
 								title="Color shift"
-								description={`How far the icon moves toward ${settings.iconMode === 'lighter' ? 'white' : 'black'}.`}
+								description={`How far the icon moves toward ${live.iconMode === 'lighter' ? 'white' : 'black'}.`}
 								value={settings.iconShift}
 								min={5}
 								max={60}
 								defaultValue={DefaultSettings.iconShift}
 								resetLabel="Reset"
+								onLive={iconShift => preview({ iconShift })}
 								onCommit={iconShift => save({ iconShift })}
 							/>
 						)}

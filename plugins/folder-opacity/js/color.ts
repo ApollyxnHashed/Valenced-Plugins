@@ -98,8 +98,7 @@ export function iconTintFor(
 			// (WCAG 3:1 for graphics) when Discord's own look is stronger than that.
 			const discordBackground = mix(rail, base, DiscordOpacity.open / 100)
 			const needed = Math.max(
-				Math.min(contrast(base, discordBackground), ClearContrast) *
-					Tolerance,
+				Math.min(contrast(base, discordBackground), ClearContrast) * Tolerance,
 				MinContrast,
 			)
 			if (contrast(base, background) >= needed) return
@@ -109,4 +108,19 @@ export function iconTintFor(
 				: colors.black
 		}
 	}
+}
+
+/**
+ * Normalizes user input to `#rrggbb` (lowercase), accepting it with or without the `#`.
+ * Returns `undefined` when it is not a complete 6-digit HEX.
+ */
+export function normalizeHex(input: string) {
+	const match = /^#?([0-9a-f]{6})$/i.exec(input.trim())
+	return match ? `#${match[1]!.toLowerCase()}` : undefined
+}
+
+/** `rgba()` of a HEX color at `opacity` percent, like Discord's `hexWithOpacity`. */
+export function withOpacity(hex: string, opacity: number) {
+	const [r, g, b] = parse(hex) ?? [0, 0, 0]
+	return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`
 }
