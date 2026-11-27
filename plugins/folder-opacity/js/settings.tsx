@@ -5,6 +5,7 @@ import { useRef, useState } from 'react'
 import { ScrollView, StyleSheet } from 'react-native'
 import FolderPreview from './preview'
 import { DefaultSettings, DiscordOpacity, normalizeSettings } from './shared'
+import { sliderProps } from './slider'
 import type { PluginSettingsComponent } from '@valenced/plugins/types'
 import type { ComponentProps } from 'react'
 import type { IconMode, Settings } from './shared'
@@ -77,25 +78,17 @@ function SliderCard({
 		onCommit(next)
 	}
 
-	// The slider takes its range under the names @valenced/types declares (`minimumValue`,
-	// `maximumValue`, `onValueChange`, `onSlidingComplete`). Discord's own settings code uses
-	// `minValue`, `maxValue`, `onChange` and `onChangeEnd` for the same props, so both are
-	// passed. With only the latter the range falls back to a default one and the thumb sticks to the end.
-	const sliderProps = {
-		step: 5,
+	const sliderConfig = sliderProps({
 		value: current,
-		minimumValue: min,
-		maximumValue: max,
-		onValueChange: change,
-		onSlidingComplete: commit,
-		minValue: min,
-		maxValue: max,
+		min,
+		max,
+		step: 5,
+		label: title,
 		onChange: change,
-		onChangeEnd: commit,
+		onCommit: commit,
 		startIcon: icons.start,
 		endIcon: icons.end,
-		accessibilityLabel: title,
-	} as unknown as ComponentProps<typeof Slider>
+	})
 
 	return (
 		<Card shadow="none" border="none">
@@ -108,7 +101,7 @@ function SliderCard({
 						{Math.round(current)}%
 					</Text>
 				</Stack>
-				<Slider {...sliderProps} />
+				<Slider {...sliderConfig} />
 				<Text variant="text-sm/medium" color="text-muted">
 					{description}
 				</Text>
@@ -225,11 +218,9 @@ export default function SettingsComponent({
 					<Stack spacing={12}>
 						<SectionHeader
 							title="Preview"
-							subtitle="A sample folder that follows the settings below as you change them."
+							subtitle="A sample folder that follows the settings below as you change them. Its color is only for the preview."
 						/>
-						<Card shadow="none" border="none">
-							<FolderPreview settings={live} />
-						</Card>
+						<FolderPreview settings={live} />
 					</Stack>
 
 					<Stack spacing={12}>

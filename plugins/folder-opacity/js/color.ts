@@ -124,3 +124,14 @@ export function withOpacity(hex: string, opacity: number) {
 	const [r, g, b] = parse(hex) ?? [0, 0, 0]
 	return `rgba(${r}, ${g}, ${b}, ${opacity / 100})`
 }
+
+/** `#rrggbb` of a Discord integer color (what Discord stores for folders). */
+export function intToHex(value: number) {
+	return `#${(value & 0xffffff).toString(16).padStart(6, '0')}`
+}
+
+/** Discord integer color of a `#rrggbb` HEX, or `undefined` when it isn't one. */
+export function hexToInt(hex: string) {
+	const normalized = normalizeHex(hex)
+	return normalized ? Number.parseInt(normalized.slice(1), 16) : undefined
+}

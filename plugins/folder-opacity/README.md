@@ -5,7 +5,7 @@
 Choose how opaque your server folders are, up to the exact HEX color you picked, with matching folder icon colors.
 
 ![Valenced](https://img.shields.io/badge/Valenced-plugin-5865F2?logo=discord&logoColor=white)
-![Version](https://img.shields.io/badge/version-1.0.1-2ea44f)
+![Version](https://img.shields.io/badge/version-1.0.2-2ea44f)
 ![Type](https://img.shields.io/badge/type-JavaScript-F7DF1E?logo=javascript&logoColor=black)
 ![License](https://img.shields.io/badge/license-GPL--3.0-blue)
 
@@ -43,9 +43,11 @@ Each slider has a button to go back to Discord's own value.
 
 **Live preview**
 
-At the top of the settings there is a sample server folder. Tap it to open or close it. It follows the sliders and the icon mode while you drag them, before anything is saved, so you can see the result right away. You can type any `#RRGGBB` color in its field to try other folder colors. That color is only for the preview: it is not saved and never changes your real folders.
+At the top of the settings there is a sample server folder that looks like the real one in Discord's server list: closed, it shows four mini icons; open, it shows three servers. Tap it to open or close it. It follows the sliders and the icon mode while you change them, before anything is saved.
 
-The settings screen also explains how opacity changes the colors you see.
+**Folder Color**
+
+The preview starts with the color of the first folder in your server list (servers outside folders are ignored). If you have no folder, it uses Discord's default color. Tap the *Folder Color* row to pick another color with Discord's own color picker. That color is only for the preview: it is not saved and never changes your real folders.
 
 > ℹ️ Turning the plugin on or off, or changing any setting, needs a Discord restart to take effect. The plugin asks for it.
 
@@ -61,7 +63,9 @@ The folder icon is tinted with the folder color itself, which only stood out whi
 - Opacity: the `resolve` function of both tokens in `Tokens.default.modules.mobile` is replaced. Folders read them through `useToken` on every render, so the new values apply as soon as they render again after a restart.
 - Icon: a `beforeJSX` patch on `FastImage` swaps the tint of the folder icon only. It is recognized by its asset (`FolderIcon`) and by a string `tintColor`. Every other image returns right away.
 - Automatic mode mixes the folder color over the server list color (`BACKGROUND_BASE_LOWEST`, resolved for the active theme) at your opacity, and compares contrast with what Discord shows at 15%. Black and white come from Discord's raw colors, so no color is hardcoded.
-- Preview: a small simulated folder built with the measures of Discord's server list. It uses the same `iconTintFor` as the real folders and colors that follow the active theme. The sliders feed it through local state, so dragging never saves anything.
+- Preview: a simulated folder built with Discord's own measures, read with `useToken`, and the same springs as the real folder. It uses the same `iconTintFor` as the real folders. The sliders feed it through local state, so dragging never saves anything.
+- First folder color: read from `SortedGuildStore.getGuildFolders()` once when the settings open, taking the first entry that is a real folder.
+- Color picker: opens Discord's native color sheet. If it can't be found, a simpler built-in sheet (palette, HEX, RGB sliders) is used instead.
 - Turning the plugin off removes every patch.
 
 </details>
@@ -82,6 +86,9 @@ The folder icon is tinted with the folder color itself, which only stood out whi
 | `js/shared.ts` | Settings type, defaults and validation |
 | `js/settings.tsx` | The plugin's settings screen |
 | `js/preview.tsx` | The interactive folder preview |
+| `js/colorPicker.tsx` | Opens Discord's color picker (with a built-in fallback) |
+| `js/folders.ts` | Finds the color of the first folder in the server list |
+| `js/slider.ts` | Slider props shared by the settings and the fallback picker |
 | `js/tokens.ts` | Discord tokens and theme colors shared by the patch and the preview |
 | `tsconfig.json` | Type-checking configuration |
 
@@ -90,7 +97,7 @@ The folder icon is tinted with the folder color itself, which only stood out whi
 | Field | Value |
 |---|---|
 | ID | `axonyum.folder-opacity` |
-| Version | `1.0.1` |
+| Version | `1.0.2` |
 | Type | JavaScript |
 | Dependencies | `valenced.api` (`>=1 <2`), `discord` (any version) |
 

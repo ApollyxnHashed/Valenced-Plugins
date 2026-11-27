@@ -47,3 +47,9 @@ export function normalizeSettings(stored?: Partial<Settings>): Settings {
 		),
 	}
 }
+
+/**
+ * Last-resort sample color of the preview, used only when Discord's own default
+ * (`RawColor.BRAND_500`, the color of new folders) can't be read.
+ */
+export const FallbackFolderColor = '#5865f2'

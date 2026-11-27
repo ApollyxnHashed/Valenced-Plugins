@@ -1,6 +1,8 @@
 import { Stores } from '@valenced/discord/flux'
+import { lookupModuleWithImportedPath } from '@valenced/discord/utils/modules/finders'
 import { lookupModule } from '@valenced/modules/finders'
 import { withProps } from '@valenced/modules/finders/filters'
+import { FallbackFolderColor } from './shared'
 import type { IconColors } from './color'
 
 // ../discord_common/js/packages/tokens/native.tsx
@@ -14,6 +16,7 @@ export interface TokensModule {
 	SemanticColor: Record<string, unknown>
 	default: {
 		colors: Record<string, object>
+		radii: Record<string, number>
 		modules: {
 			mobile: Record<string, ModuleToken | undefined>
 		}
@@ -29,9 +32,6 @@ interface ThemeStore {
 
 /** Semantic color of the server list, which folder backgrounds are drawn over. */
 const RailColor = 'BACKGROUND_BASE_LOWEST'
-
-/** Semantic color of the placeholder servers drawn in the preview. */
-const ServerColor = 'BACKGROUND_SURFACE_HIGHEST'
 
 export const tokensFilter = () =>
 	withProps<TokensModule>('RawColor', 'SemanticColor')
@@ -68,11 +68,21 @@ export function iconColors(tokens: TokensModule): IconColors {
 	}
 }
 
-/** Colors of the preview that follow the active theme. */
-export function previewColors(tokens: TokensModule) {
-	const colors = iconColors(tokens)
-	return {
-		...colors,
-		server: semantic(tokens, ServerColor, colors.rail),
-	}
+/** Color Discord gives new folders, which is also the preview's last-resort color. */
+export function defaultFolderColor(tokens: TokensModule | undefined) {
+	return tokens?.RawColor.BRAND_500 ?? FallbackFolderColor
+}
+
+type UseToken = (token: unknown) => unknown
+
+/**
+ * Discord's `useToken` hook (../discord_app/design/tokens/native/useToken.tsx). It resolves a token
+ * with the theme context, so it follows the active theme and the experiments that change the
+ * server list measures (the "visual refresh" layout).
+ */
+export function lookupUseToken() {
+	const [module, id] = lookupModuleWithImportedPath<{ useToken: UseToken }>(
+		'design/tokens/native/useToken.tsx',
+	)
+	return id === undefined ? undefined : module?.useToken
 }
